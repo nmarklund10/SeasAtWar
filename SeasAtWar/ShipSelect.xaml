@@ -1,0 +1,52 @@
+﻿<Page
+    x:Class="SeasAtWar.ShipSelect"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SeasAtWar"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
+    mc:Ignorable="d"
+    Unloaded="Page_Unloaded">
+    <Grid Name="gameBoard" IsHoldingEnabled="False" IsRightTapEnabled="False">
+        <Grid.Background>
+            <ImageBrush ImageSource="images/shipSelect.png" Stretch="Uniform"></ImageBrush>
+        </Grid.Background>
+        <canvas:CanvasAnimatedControl x:Name="screenCanvas" Draw="canvas_Draw" CreateResources="canvas_CreateResources"/>
+
+        <TextBlock x:Name="title" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Ship Select" VerticalAlignment="Top" Margin="540,17,0,0" Height="45" Width="275" Foreground="White" FontFamily="Stencil" FontSize="45" TextAlignment="Center"/>
+        <Button x:Name="quit" Content="Quit" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1117,587,0,0" Style="{StaticResource sawMainStyle}" Height="66" Width="123" FontSize="35" Click="quit_Click"/>
+        <Button x:Name="Scrambler" Content="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="500,115,0,0" Style="{StaticResource SaWGameStyle}" Height="45" Width="45" FontSize="30" Click="shipSelect_Click"/>
+        <Button x:Name="Scanner" Content="2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="500,170,0,0" Style="{StaticResource SaWGameStyle}" Height="45" Width="45" FontSize="30" Click="shipSelect_Click"/>
+        <Button x:Name="Submarine" Content="3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="500,260,0,0" Style="{StaticResource SaWGameStyle}" Height="45" Width="45" FontSize="30" Click="shipSelect_Click"/>
+        <Button x:Name="Defender" Content="4" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="500,315,0,0" Style="{StaticResource SaWGameStyle}" Height="45" Width="45" FontSize="30" Click="shipSelect_Click"/>
+        <Button x:Name="Cruiser" Content="5" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="500,405,0,0" Style="{StaticResource SaWGameStyle}" Height="45" Width="45" FontSize="30" Click="shipSelect_Click"/>
+        <Button x:Name="Carrier" Content="6" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="500,460,0,0" Style="{StaticResource SaWGameStyle}" Height="45" Width="45" FontSize="30" Click="shipSelect_Click"/>
+        <Button x:Name="Executioner" Content="7" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="500,550,0,0" Style="{StaticResource SaWGameStyle}" Height="45" Width="45" FontSize="30" Click="shipSelect_Click"/>
+        <Button x:Name="Artillery" Content="8" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="500,605,0,0" Style="{StaticResource SaWGameStyle}" Height="45" Width="45" FontSize="30" Click="shipSelect_Click"/>
+        <TextBlock x:Name="class2" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Class 2" VerticalAlignment="Top" Margin="500,76,0,0" Foreground="White" FontSize="30" FontFamily="Stencil"/>
+        <TextBlock x:Name="class3" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Class 3" VerticalAlignment="Top" Margin="500,221,0,0" Foreground="White" FontSize="30" FontFamily="Stencil"/>
+        <TextBlock x:Name="class4" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Class 4" VerticalAlignment="Top" Margin="500,366,0,0" Foreground="White" FontSize="30" FontFamily="Stencil"/>
+        <TextBlock x:Name="class5" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Class 5" VerticalAlignment="Top" Margin="500,511,0,0" Foreground="White" FontSize="30" FontFamily="Stencil"/>
+        <TextBlock x:Name="scramblerText" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Scrambler" VerticalAlignment="Top" Margin="564,118,0,0" Foreground="White" FontSize="28" Height="35"/>
+        <TextBlock x:Name="scannerText" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Scanner" VerticalAlignment="Top" Margin="564,173,0,0" Foreground="White" FontSize="28" Height="34"/>
+        <TextBlock x:Name="submarineText" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Submarine" VerticalAlignment="Top" Margin="564,263,0,0" Foreground="White" FontSize="28" Height="34"/>
+        <TextBlock x:Name="defenderText" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Defender" VerticalAlignment="Top" Margin="564,318,0,0" Foreground="White" FontSize="28" Height="34"/>
+        <TextBlock x:Name="cruiserText" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Cruiser" VerticalAlignment="Top" Margin="564,408,0,0" Foreground="White" FontSize="28" Height="33"/>
+        <TextBlock x:Name="carrierText" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Carrier" VerticalAlignment="Top" Margin="564,463,0,0" Foreground="White" FontSize="28" Height="33"/>
+        <TextBlock x:Name="executionerText" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Executioner" VerticalAlignment="Top" Margin="564,557,0,0" Foreground="White" FontSize="28" Height="33"/>
+        <TextBlock x:Name="artilleryText" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Artillery" VerticalAlignment="Top" Margin="564,608,0,0" Foreground="White" FontSize="28" Height="39"/>
+        <Image x:Name="scramblerImage" Source="images/Ships/ship2ScramblerHor.png" HorizontalAlignment="Left" Height="28" Width="56" VerticalAlignment="Top" Margin="725,127,0,0"/>
+        <Image x:Name="scannerImage" Source="images/Ships/ship2ScannerHor.png" HorizontalAlignment="Left" Height="28" Width="56" VerticalAlignment="Top" Margin="725,182,0,0"/>
+        <Image x:Name="submarineImage" Source="images/Ships/ship3SubmarineHor.png" HorizontalAlignment="Left" Height="28" Width="84" VerticalAlignment="Top" Margin="725,272,0,0"/>
+        <Image x:Name="defenderImage" Source="images/Ships/ship3DefenderHor.png" HorizontalAlignment="Left" Height="28" Width="84" VerticalAlignment="Top" Margin="725,327,0,0"/>
+        <Image x:Name="cruiserImage" Source="images/Ships/ship4CruiserHor.png" HorizontalAlignment="Left" Height="28" Width="112" VerticalAlignment="Top" Margin="725,417,0,0"/>
+        <Image x:Name="carrierImage" Source="images/Ships/ship4CarrierHor.png" HorizontalAlignment="Left" Height="28" Width="112" VerticalAlignment="Top" Margin="725,472,0,0"/>
+        <Image x:Name="executionerImage" Source="images/Ships/ship5ExecutionerHor.png" HorizontalAlignment="Left" Height="28" Width="140" VerticalAlignment="Top" Margin="725,566,0,0"/>
+        <Image x:Name="artilleryImage" Source="images/Ships/ship5ArtilleryHor.png" HorizontalAlignment="Left" Height="28" Width="140" VerticalAlignment="Top" Margin="725,617,0,0"/>
+        <TextBlock x:Name="shipDescriptionDetails" HorizontalAlignment="Left" Text="1. Select ship using buttons on right panel&#x0d;2. Drag ships on grid AFTER choosing ship type&#x0d;3. Double tap ship to rotate&#x0d;4. 90 second time limit to position ships&#x0d;5. Press Finish Fleet Button when done" TextWrapping="Wrap" VerticalAlignment="Bottom" Margin="47,0,0,59" Height="162" Width="380" Foreground="White" FontSize="19"/>
+        <TextBlock x:Name="shipDescriptionTitle" HorizontalAlignment="Left" Text="Controls" TextWrapping="Wrap" VerticalAlignment="Bottom" Margin="47,0,0,224" Height="28" Width="380" Foreground="White" FontSize="21" FontFamily="Stencil"/>
+        <Button x:Name="finishButton" Content="Finish Fleet 🢂" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="927,22,0,0" Style="{StaticResource sawMainStyle}" Height="65" Width="300" FontSize="35" Click="finishButton_Click"/>
+        <TextBlock x:Name="timerText" HorizontalAlignment="Left" Text="Timer:  " TextWrapping="Wrap" VerticalAlignment="Bottom" Margin="927,0,0,567" Height="65" Width="300" Foreground="White" FontSize="36" FontFamily="Stencil"/>
+    </Grid>
+</Page>

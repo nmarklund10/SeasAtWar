@@ -1,0 +1,16 @@
+﻿<Page
+    x:Class="SeasAtWar.HowToPlay"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SeasAtWar"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Grid Background="Black" UseLayoutRounding="False">
+        <TextBlock x:Name="textBlock" HorizontalAlignment="Center" TextWrapping="Wrap" Text="How To Play" VerticalAlignment="Top" Height="100" Width="1000" Margin="0,30,0,0" Foreground="#FFFB0001" FontFamily="Stencil" FontSize="72" TextAlignment="Center"/>
+        <Image x:Name="currentInstruction" Source="images/Instructions/instruct1.jpg" HorizontalAlignment="Center" Height="504" Margin="0,120,0,0" VerticalAlignment="Top" Width="896" IsDoubleTapEnabled="False" IsHoldingEnabled="False" IsRightTapEnabled="False" Stretch="UniformToFill"/>
+        <Button x:Name="backButton" Content="Go Back" HorizontalAlignment="Left" Height="80" Margin="27,30,0,0" VerticalAlignment="Top" Width="230" BorderBrush="Black" Opacity="1" Visibility="Visible" BorderThickness="1" ClickMode="Press" FontFamily="Stencil" FontSize="45" FontWeight="Normal" FontStyle="Normal" IsDoubleTapEnabled="False" IsRightTapEnabled="False" Foreground="#FFF3F3F3" Style="{StaticResource sawMainStyle}" Click="backButton_Click"/>
+        <Button x:Name="nextInstruction" Content="🢂" HorizontalAlignment="Left" Height="80" Margin="903,624,0,0" VerticalAlignment="Top" BorderBrush="Black" Opacity="1" Visibility="Visible" BorderThickness="1" ClickMode="Press" FontSize="72" FontWeight="Normal" FontStyle="Normal" IsDoubleTapEnabled="False" IsRightTapEnabled="False" Foreground="#FFF3F3F3" Style="{StaticResource sawMainStyle}" Click="nextInstruction_Click" Width="185"/>
+        <Button x:Name="prevInstruction" Content="🢀" HorizontalAlignment="Left" Height="80" Margin="192,624,0,0" VerticalAlignment="Top" Width="185" BorderBrush="Black" Opacity="1" Visibility="Visible" BorderThickness="1" ClickMode="Press" FontSize="72" FontWeight="Normal" FontStyle="Normal" IsDoubleTapEnabled="False" IsRightTapEnabled="False" Foreground="#FFF3F3F3" Style="{StaticResource sawMainStyle}" Click="prevInstruction_Click"/>
+    </Grid>
+</Page>

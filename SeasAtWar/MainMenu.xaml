@@ -1,0 +1,19 @@
+﻿<Page
+    x:Class="SeasAtWar.MainMenu"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:SeasAtWar"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <Grid Name="grid" BorderBrush="Black">
+        <Grid.Background>
+            <ImageBrush ImageSource="images/mainMenu.png" Stretch="UniformToFill"></ImageBrush>
+        </Grid.Background>
+        <Button x:Name="hostGame" Content="Host Private Game" HorizontalAlignment="Left" Height="80" Margin="48,180,0,0" VerticalAlignment="Top" Width="470" BorderBrush="Black" Opacity="1" Visibility="Visible" BorderThickness="1" ClickMode="Press" FontFamily="Stencil" FontSize="45" FontWeight="Normal" FontStyle="Normal" IsDoubleTapEnabled="False" IsRightTapEnabled="False" Foreground="#FFF3F3F3" Style="{StaticResource sawMainStyle}" Click="hostGame_Click"/>
+        <Button x:Name="joinPrivate" Content="Join Private Game" HorizontalAlignment="Left" Height="80" Margin="48,285,0,0" VerticalAlignment="Top" Width="470" BorderBrush="Black" Opacity="1" Visibility="Visible" BorderThickness="1" ClickMode="Press" FontFamily="Stencil" FontSize="45" FontWeight="Normal" FontStyle="Normal" IsDoubleTapEnabled="False" IsRightTapEnabled="False" Foreground="#FFF3F3F3" Style="{StaticResource sawMainStyle}" Click="joinPrivate_Click"/>
+        <Button x:Name="joinPublic" Content="Join Public Game" HorizontalAlignment="Left" Height="80" Margin="48,390,0,0" VerticalAlignment="Top" Width="470" BorderBrush="Black" Opacity="1" Visibility="Visible" BorderThickness="1" ClickMode="Press" FontFamily="Stencil" FontSize="45" FontWeight="Normal" FontStyle="Normal" IsDoubleTapEnabled="False" IsRightTapEnabled="False" Foreground="#FFF3F3F3" Style="{StaticResource sawMainStyle}" Click="joinPublic_Click"/>
+        <Button x:Name="howToPlay" Content="How To Play" HorizontalAlignment="Left" Height="80" Margin="48,495,0,0" VerticalAlignment="Top" Width="470" BorderBrush="Black" Opacity="1" Visibility="Visible" BorderThickness="1" ClickMode="Press" FontFamily="Stencil" FontSize="45" FontWeight="Normal" FontStyle="Normal" IsDoubleTapEnabled="False" IsRightTapEnabled="False" Foreground="#FFF3F3F3" Style="{StaticResource sawMainStyle}" Click="howToPlay_Click"/>
+        <Button x:Name="exit" Content="Exit" HorizontalAlignment="Left" Height="80" Margin="48,600,0,0" VerticalAlignment="Top" Width="470" BorderBrush="Black" Opacity="1" Visibility="Visible" BorderThickness="1" ClickMode="Press" FontFamily="Stencil" FontSize="45" FontWeight="Normal" FontStyle="Normal" IsDoubleTapEnabled="False" IsRightTapEnabled="False" Foreground="#FFF3F3F3" Style="{StaticResource sawMainStyle}" Click="exit_Click"/>
+    </Grid>
+</Page>
