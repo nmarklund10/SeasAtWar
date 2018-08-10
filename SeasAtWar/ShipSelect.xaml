@@ -46,7 +46,7 @@
         <Image x:Name="artilleryImage" Source="images/Ships/ship5ArtilleryHor.png" HorizontalAlignment="Left" Height="28" Width="140" VerticalAlignment="Top" Margin="725,617,0,0"/>
         <TextBlock x:Name="shipDescriptionDetails" HorizontalAlignment="Left" Text="1. Select ship using buttons on right panel&#x0d;2. Drag ships on grid AFTER choosing ship type&#x0d;3. Double tap ship to rotate&#x0d;4. 90 second time limit to position ships&#x0d;5. Press Finish Fleet Button when done" TextWrapping="Wrap" VerticalAlignment="Bottom" Margin="47,0,0,59" Height="162" Width="380" Foreground="White" FontSize="19"/>
         <TextBlock x:Name="shipDescriptionTitle" HorizontalAlignment="Left" Text="Controls" TextWrapping="Wrap" VerticalAlignment="Bottom" Margin="47,0,0,224" Height="28" Width="380" Foreground="White" FontSize="21" FontFamily="Stencil"/>
-        <Button x:Name="finishButton" Content="Finish Fleet 🢂" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="927,22,0,0" Style="{StaticResource sawMainStyle}" Height="65" Width="300" FontSize="35" Click="finishButton_Click"/>
+        <Button x:Name="finishButton" Content="Finish Fleet 🢂" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="927,22,0,0" Style="{StaticResource sawMainStyle}" Height="65" Width="300" FontSize="35" Click="FinishButton_Click"/>
         <TextBlock x:Name="timerText" HorizontalAlignment="Left" Text="Timer:  " TextWrapping="Wrap" VerticalAlignment="Bottom" Margin="927,0,0,567" Height="65" Width="300" Foreground="White" FontSize="36" FontFamily="Stencil"/>
     </Grid>
 </Page>

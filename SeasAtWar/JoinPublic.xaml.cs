@@ -16,24 +16,24 @@ namespace SeasAtWar
         public JoinPublic()
         {
             InitializeComponent();
-            Globals.socket.On(Globals.playerID + " join success", async (data) =>
+            Globals.socket.On(Globals.PlayerID + " join success", async (data) =>
             {
-                Globals.gameID = (long)data;
-                Globals.socket.Off(Globals.playerID + " join success");
-                Globals.socket.Emit("update gameID", Globals.gameID);
+                Globals.GameID = (long)data;
+                Globals.socket.Off(Globals.PlayerID + " join success");
+                Globals.socket.Emit("update gameID", Globals.GameID);
                 await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                  {
                      Frame.Navigate(typeof(ShipSelect));
                  });
             });
-            Globals.socket.Emit("join public game", Globals.playerID);
+            Globals.socket.Emit("join public game", Globals.PlayerID);
             publicText.Text = "Searching for other player...";
         }
 
         private void cancelSearch_Click(object sender, RoutedEventArgs e)
         {
-            Globals.socket.Off(Globals.playerID + " join success");
-            Globals.socket.Emit("remove from public queue", Globals.playerID);
+            Globals.socket.Off(Globals.PlayerID + " join success");
+            Globals.socket.Emit("remove from public queue", Globals.PlayerID);
             Frame.Navigate(typeof(MainMenu));
         }
     }

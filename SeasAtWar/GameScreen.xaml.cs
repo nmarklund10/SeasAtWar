@@ -186,7 +186,7 @@ namespace SeasAtWar
 
         private void screenCanvas_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
         {
-            if (Globals.drawReady)
+            if (Globals.DrawReady)
             {
                 for (int i = 0; i < shipImages.Length; i++)
                 {

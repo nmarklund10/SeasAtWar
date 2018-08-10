@@ -1,5 +1,4 @@
-﻿using System;
-using Windows.ApplicationModel;
+﻿using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -9,6 +8,8 @@ using Quobject.SocketIoClientDotNet.Client;
 using Windows.UI.ViewManagement;
 using Windows.Foundation;
 using Windows.ApplicationModel.Core;
+using System;
+using Windows.UI.Core;
 
 namespace SeasAtWar
 {
@@ -18,17 +19,17 @@ namespace SeasAtWar
 
     public static class Globals
     {
-        public static long playerID { get; set; }
-        public static long gameID { get; set; }
+        public static long PlayerID { get; set; }
+        public static long GameID { get; set; }
         public static Socket socket;
         public static Player player;
-        public static bool drawReady { get; set; }
+        public static bool DrawReady { get; set; }
         static Globals()
         {
             socket = IO.Socket("https://seasatwar.herokuapp.com");
             socket.Connect();
-            drawReady = false;
-            gameID = -1;
+            DrawReady = false;
+            GameID = -1;
             player = new Player();
         }
     }
@@ -360,6 +361,7 @@ namespace SeasAtWar
         /// </summary>
         private bool connected = false;
         private object connect_lock = new object();
+        private bool dialog_open = false;
         
         public App()
         {
@@ -367,7 +369,7 @@ namespace SeasAtWar
             Suspending += OnSuspending;
             Globals.socket.On("welcome", (data) =>
             {
-                Globals.playerID = (long)data;
+                Globals.PlayerID = (long)data;
                 lock (connect_lock) 
                 {
                     connected = true;
@@ -375,19 +377,23 @@ namespace SeasAtWar
             });
             Globals.socket.On("disconnect", async () =>
             {
-                var dialog = new ContentDialog()
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
-                    Title = "Server Disconnect",
-                    MaxWidth = ActualWidth, // Required for Mobile!
-                    Content = "You have lost connection to the server.  Press OK to close the app."
-                };
-
-                dialog.PrimaryButtonText = "OK";
-                dialog.IsSecondaryButtonEnabled = false;
-
-                var result = await dialog.ShowAsync();
-                Globals.socket.Disconnect();
-                CoreApplication.Exit();
+                    if (!dialog_open)
+                    {
+                        dialog_open = true;
+                        var dialog = new ContentDialog
+                        {
+                            Title = "Server Disconnect",
+                            Content = "You have lost connection to the server.  Press OK to close the app.",
+                            PrimaryButtonText = "OK",
+                            IsSecondaryButtonEnabled = false
+                        };
+                        var result = await dialog.ShowAsync();
+                        Globals.socket.Disconnect();
+                        CoreApplication.Exit();
+                    }
+                });
             });
             Globals.socket.Emit("new player", "");
         }

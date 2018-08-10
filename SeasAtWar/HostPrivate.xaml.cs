@@ -27,10 +27,10 @@ namespace SeasAtWar
         public HostPrivate()
         {
             InitializeComponent();
-            Globals.socket.On(Globals.playerID + " join success", async (data) =>
+            Globals.socket.On(Globals.PlayerID + " join success", async (data) =>
             {
-                Globals.socket.Off(Globals.playerID + " gameID created");
-                Globals.socket.Off(Globals.playerID + " join success");
+                Globals.socket.Off(Globals.PlayerID + " gameID created");
+                Globals.socket.Off(Globals.PlayerID + " join success");
                 await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     Frame.Navigate(typeof(ShipSelect));
@@ -38,22 +38,22 @@ namespace SeasAtWar
             });
             Globals.socket.On("private game created", async (data) =>
             {
-                Globals.gameID = (long)data;
+                Globals.GameID = (long)data;
                 await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
-                    sessionTextBlock.Text = "Your Private Session ID is " + Globals.gameID + "\nWaiting for other player ...";
+                    sessionTextBlock.Text = "Your Private Session ID is " + Globals.GameID + "\nWaiting for other player ...";
                 });
             });
-            Globals.socket.Emit("new private game", Globals.playerID);
+            Globals.socket.Emit("new private game", Globals.PlayerID);
         }
 
         private void backButton_Click(object sender, RoutedEventArgs e)
         {
-            Globals.socket.Off(Globals.playerID + " join success");
+            Globals.socket.Off(Globals.PlayerID + " join success");
             Globals.socket.Off("private game created");
-            if (Globals.gameID > -1)
-                Globals.socket.Emit("delete game", Globals.gameID);
-            Globals.gameID = -1;
+            if (Globals.GameID > -1)
+                Globals.socket.Emit("delete game", Globals.GameID);
+            Globals.GameID = -1;
             Frame.Navigate(typeof(MainMenu));
         }
     }

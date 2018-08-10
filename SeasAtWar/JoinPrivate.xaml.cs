@@ -47,7 +47,7 @@ namespace SeasAtWar
             });
             Globals.socket.On("join success", async (data) =>
             {
-                Globals.gameID = (long)data;
+                Globals.GameID = (long)data;
                 Globals.socket.Off("join error");
                 Globals.socket.Off("join full");
                 Globals.socket.Off("join success");
@@ -75,7 +75,7 @@ namespace SeasAtWar
                 if (int.TryParse(userInput.Text, out input))
                 {
                     errorText.Text = "Waiting for server...";
-                    Globals.socket.Emit("join private game", string.Format("{{\"playerID\": {0}, \"gameID\": {1}}}", Globals.playerID, input));
+                    Globals.socket.Emit("join private game", string.Format("{{\"playerID\": {0}, \"gameID\": {1}}}", Globals.PlayerID, input));
                     joinGame.IsEnabled = false;
                 }
                 else
