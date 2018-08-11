@@ -59,7 +59,7 @@ namespace SeasAtWar
 
         }
 
-        private void backButton_Click(object sender, RoutedEventArgs e)
+        private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             Globals.socket.Off("join error");
             Globals.socket.Off("join full");
@@ -67,12 +67,11 @@ namespace SeasAtWar
             Frame.Navigate(typeof(MainMenu));
         }
 
-        private void joinGame_Click(object sender, RoutedEventArgs e)
+        private void JoinGame_Click(object sender, RoutedEventArgs e)
         {
             if (userInput.Text.Length > 0)
             {
-                int input;
-                if (int.TryParse(userInput.Text, out input))
+                if (int.TryParse(userInput.Text, out int input))
                 {
                     errorText.Text = "Waiting for server...";
                     Globals.socket.Emit("join private game", string.Format("{{\"playerID\": {0}, \"gameID\": {1}}}", Globals.PlayerID, input));

@@ -47,7 +47,7 @@ namespace SeasAtWar
             Globals.socket.Emit("new private game", Globals.PlayerID);
         }
 
-        private void backButton_Click(object sender, RoutedEventArgs e)
+        private void BackButton_Click(object sender, RoutedEventArgs e)
         {
             Globals.socket.Off(Globals.PlayerID + " join success");
             Globals.socket.Off("private game created");

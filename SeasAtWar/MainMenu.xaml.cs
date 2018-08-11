@@ -22,23 +22,23 @@ namespace SeasAtWar
         {
             InitializeComponent();
         }
-        private void hostGame_Click(object sender, RoutedEventArgs e)
+        private void HostGame_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(HostPrivate)); 
         }
-        private void joinPrivate_Click(object sender, RoutedEventArgs e)
+        private void JoinPrivate_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(JoinPrivate));
         }
-        private void joinPublic_Click(object sender, RoutedEventArgs e)
+        private void JoinPublic_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(JoinPublic));
         }
-        private void howToPlay_Click(object sender, RoutedEventArgs e)
+        private void HowToPlay_Click(object sender, RoutedEventArgs e)
         {
             Frame.Navigate(typeof(HowToPlay));
         }
-        private void exit_Click(object sender, RoutedEventArgs e)
+        private void Exit_Click(object sender, RoutedEventArgs e)
         {
             Globals.socket.Disconnect();
             CoreApplication.Exit();

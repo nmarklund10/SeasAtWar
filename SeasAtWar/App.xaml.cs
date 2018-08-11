@@ -26,7 +26,8 @@ namespace SeasAtWar
         public static bool DrawReady { get; set; }
         static Globals()
         {
-            socket = IO.Socket("https://seasatwar.herokuapp.com");
+            //socket = IO.Socket("https://seasatwar.herokuapp.com");
+            socket = IO.Socket("http://127.0.0.1:3000");
             socket.Connect();
             DrawReady = false;
             GameID = -1;
@@ -39,7 +40,7 @@ namespace SeasAtWar
         public Tile[][] homeGrid = new Tile[9][];
         public Tile[][] targetGrid = new Tile[9][];
         public Ship[] fleet;
-        public bool hasTurn { get; set; }
+        public bool HasTurn { get; set; }
 
         public Player()
         {
@@ -51,14 +52,14 @@ namespace SeasAtWar
             {
                 targetGrid[i] = new Tile[9];
             }
-            hasTurn = false;
+            HasTurn = false;
         }
 
 
-        public void loadGrid(string grid, Point topLeftCorner, double tileSize)
+        public void LoadGrid(string grid, Point topLeftCorner, double tileSize)
         {
-            double x = topLeftCorner.x;
-            double y = topLeftCorner.y;
+            double x = topLeftCorner.X;
+            double y = topLeftCorner.Y;
             for (int i = 0; i < 9; i++)
             {
                 for (int j = 0; j < 9; j++)
@@ -72,7 +73,7 @@ namespace SeasAtWar
         }
 
 
-        public void clearGrids()
+        public void ClearGrids()
         {
             for (int i = 0; i < 9; i++)
             {
@@ -90,56 +91,56 @@ namespace SeasAtWar
     */
     public class Tile
     {
-        public Point gridPoint { get; private set; }
-        public Point screenPoint { get; private set; }
-        public bool hasShip { get; set; }
-        public int shipHit { get; set; }
-        public int shipIndex { get; set; }
-        public bool partialVision { get; set; }
-        public bool scrambled { get; set; }
-        public bool detected { get; set; }
-        public int scanCount { get; set; }
+        public Point GridPoint { get; private set; }
+        public Point ScreenPoint { get; private set; }
+        public bool HasShip { get; set; }
+        public int ShipHit { get; set; }
+        public int ShipIndex { get; set; }
+        public bool PartialVision { get; set; }
+        public bool Scrambled { get; set; }
+        public bool Detected { get; set; }
+        public int ScanCount { get; set; }
 
         public Tile(Point pixelPoint, Point gameboardPoint)
         {
-            screenPoint = pixelPoint;         //top left corner pixel coordinates
-            gridPoint = gameboardPoint;	//x and y coordinate in relation to grid
-            hasShip = false;       //whether or not a ship occupies this tile
-            shipHit = 2;   //1 = 'hit', 0 = 'miss', 2 = 'not shot at'
-            shipIndex = -1;        //contains index of ship in player fleet
-            partialVision = false; //Whether Tile is under the influence of Scanner's special attack.
-            scrambled = false;
-            detected = false;
-            scanCount = -1;
+            ScreenPoint = pixelPoint;         //top left corner pixel coordinates
+            GridPoint = gameboardPoint;	//x and y coordinate in relation to grid
+            HasShip = false;       //whether or not a ship occupies this tile
+            ShipHit = 2;   //1 = 'hit', 0 = 'miss', 2 = 'not shot at'
+            ShipIndex = -1;        //contains index of ship in player fleet
+            PartialVision = false; //Whether Tile is under the influence of Scanner's special attack.
+            Scrambled = false;
+            Detected = false;
+            ScanCount = -1;
         }
 
 
-        public bool shipPresent()
+        public bool ShipPresent()
         {
-            return hasShip;
+            return HasShip;
         }
 
 
-        public bool isShotAt()
+        public bool IsShotAt()
         {
-            if (shipHit > 1)
+            if (ShipHit > 1)
                 return false;
             return true; 
         }
 
 
-        public void updateTile()
+        public void UpdateTile()
         {
-            if (!isShotAt())
+            if (!IsShotAt())
             {
-                if (shipPresent())
+                if (ShipPresent())
                 {
-                    shipHit = 1;
-                    Globals.player.fleet[shipIndex].shotCounter++;
+                    ShipHit = 1;
+                    Globals.player.fleet[ShipIndex].ShotCounter++;
                 }
                 else
                 {
-                    shipHit = 0;
+                    ShipHit = 0;
                 }
             }
         }
@@ -153,19 +154,19 @@ namespace SeasAtWar
     */
     public class Point
     {
-        public double x { get; set; }
-        public double y { get; set; }
+        public double X { get; set; }
+        public double Y { get; set; }
 
         public Point(double xPos, double yPos)
         {
-            x = xPos;
-            y = yPos;
+            X = xPos;
+            Y = yPos;
         }
 
-        public void move(double newX, double newY)
+        public void Move(double newX, double newY)
         {
-            x = newX;
-            y = newY;
+            X = newX;
+            Y = newY;
         }
 
         public override bool Equals(object obj)
@@ -173,140 +174,140 @@ namespace SeasAtWar
             if (obj == null || GetType() != obj.GetType())
                 return false;
             Point p = (Point)obj;
-            return (x == p.x) && (y == p.y);
+            return (X == p.X) && (Y == p.Y);
         }
 
         public override int GetHashCode()
         {
-            return (int)(x*y);
+            return (int)(X*Y);
         }
     }
 
     public class Ship
     {
-        public string shipName { get; set; }
+        public string ShipName { get; set; }
         public Point mainPoint;
-        public bool vertical { get; set; }
-        public int length { get; set; }
-        public bool alive { get; set; }
+        public bool Vertical { get; set; }
+        public int Length { get; set; }
+        public bool Alive { get; set; }
         public Point[] positionArray;
-        public int shotCounter { get; set; }
-        public int specialAttacksLeft { get; set; }
-        public bool firstHit { get; set; }
+        public int ShotCounter { get; set; }
+        public int SpecialAttacksLeft { get; set; }
+        public bool FirstHit { get; set; }
 
         public Ship(string name, int shipSize, Point frontPoint)
         {
-            shipName = name;
+            ShipName = name;
             mainPoint = frontPoint;
-            vertical = true;
-            length = shipSize;
-            alive = true;
-            positionArray = updatePosArray();
-            updateHomeGrid(true, length - 2);
-            shotCounter = 0;  //if counter reaches ship's length, it sinks
-            specialAttacksLeft = 1;
-            firstHit = false;
+            Vertical = true;
+            Length = shipSize;
+            Alive = true;
+            positionArray = UpdatePosArray();
+            UpdateHomeGrid(true, Length - 2);
+            ShotCounter = 0;  //if counter reaches ship's length, it sinks
+            SpecialAttacksLeft = 1;
+            FirstHit = false;
         }
 
-        public Tuple<Point[], bool> getRotationPosition()
+        public Tuple<Point[], bool> GetRotationPosition()
         {
-            if ((!vertical && ((mainPoint.y + length - 1) > 8)) || (vertical && ((mainPoint.x + length - 1) > 8)))
+            if ((!Vertical && ((mainPoint.Y + Length - 1) > 8)) || (Vertical && ((mainPoint.X + Length - 1) > 8)))
                 return new Tuple<Point[], bool>(new Point[0], false);   //outside of game board
-            Point[] pos = new Point[length];
+            Point[] pos = new Point[Length];
             pos[0] = mainPoint;
             bool success = true;
-            for (int i = 1; i < length; i++)
+            for (int i = 1; i < Length; i++)
             {
-                if (vertical)
+                if (Vertical)
                 {
-                    if (Globals.player.homeGrid[(int)(mainPoint.x + i)][(int)(mainPoint.y)].hasShip && Globals.player.homeGrid[(int)(mainPoint.x + i)][(int)(mainPoint.y)].shipIndex != (length - 2))
+                    if (Globals.player.homeGrid[(int)(mainPoint.X + i)][(int)(mainPoint.Y)].HasShip && Globals.player.homeGrid[(int)(mainPoint.X + i)][(int)(mainPoint.Y)].ShipIndex != (Length - 2))
                         success = false;
-                    pos[i] = new Point(mainPoint.x + i, mainPoint.y);
+                    pos[i] = new Point(mainPoint.X + i, mainPoint.Y);
                 }
                 else
                 {
-                    if (Globals.player.homeGrid[(int)(mainPoint.x)][(int)(mainPoint.y + i)].hasShip && Globals.player.homeGrid[(int)(mainPoint.x)][(int)(mainPoint.y + i)].shipIndex != (length - 2))
+                    if (Globals.player.homeGrid[(int)(mainPoint.X)][(int)(mainPoint.Y + i)].HasShip && Globals.player.homeGrid[(int)(mainPoint.X)][(int)(mainPoint.Y + i)].ShipIndex != (Length - 2))
                         success = false;
-                    pos[i] = new Point(mainPoint.x, mainPoint.y + i);
+                    pos[i] = new Point(mainPoint.X, mainPoint.Y + i);
                 }
             }
             return new Tuple<Point[], bool>(pos, success);
         }
 
-        public Tuple<Point[], bool> getMovePosition(Point newMainPoint)
+        public Tuple<Point[], bool> GetMovePosition(Point newMainPoint)
         {
-            if (newMainPoint.x < 0 || newMainPoint.y < 0 || (vertical && ((newMainPoint.y + length - 1) > 8)) || (!vertical && ((newMainPoint.x + length - 1) > 8)))
+            if (newMainPoint.X < 0 || newMainPoint.Y < 0 || (Vertical && ((newMainPoint.Y + Length - 1) > 8)) || (!Vertical && ((newMainPoint.X + Length - 1) > 8)))
                 return new Tuple<Point[], bool>(new Point[0], false);   //outside of game board
             bool success = true;
-            Point[] pos = new Point[length];
-            for (int i = 0; i < length; i++)
+            Point[] pos = new Point[Length];
+            for (int i = 0; i < Length; i++)
             {
-                if (vertical)
+                if (Vertical)
                 {
-                    if (Globals.player.homeGrid[(int)(newMainPoint.x)][(int)(newMainPoint.y + i)].hasShip && Globals.player.homeGrid[(int)(newMainPoint.x)][(int)(newMainPoint.y + i)].shipIndex != (length - 2))
+                    if (Globals.player.homeGrid[(int)(newMainPoint.X)][(int)(newMainPoint.Y + i)].HasShip && Globals.player.homeGrid[(int)(newMainPoint.X)][(int)(newMainPoint.Y + i)].ShipIndex != (Length - 2))
                         success = false;  //another ship is in the spot
-                    pos[i] = new Point(newMainPoint.x, newMainPoint.y + i);
+                    pos[i] = new Point(newMainPoint.X, newMainPoint.Y + i);
                 }
                 else
                 {
-                    if (Globals.player.homeGrid[(int)(newMainPoint.x + i)][(int)(newMainPoint.y)].hasShip && Globals.player.homeGrid[(int)(newMainPoint.x + i)][(int)(newMainPoint.y)].shipIndex != (length - 2))
+                    if (Globals.player.homeGrid[(int)(newMainPoint.X + i)][(int)(newMainPoint.Y)].HasShip && Globals.player.homeGrid[(int)(newMainPoint.X + i)][(int)(newMainPoint.Y)].ShipIndex != (Length - 2))
                         success = false;  //another ship is in the spot
-                    pos[i] = new Point(newMainPoint.x + i, newMainPoint.y);
+                    pos[i] = new Point(newMainPoint.X + i, newMainPoint.Y);
                 }
             }
             return new Tuple<Point[], bool>(pos, success);
         }
 
-        public void updateHomeGrid(bool updateValue, int shipIndex)
+        public void UpdateHomeGrid(bool updateValue, int shipIndex)
         {
             for (int i = 0; i < positionArray.Length; i++)
             {
-                Globals.player.homeGrid[(int)positionArray[i].x][(int)positionArray[i].y].hasShip = updateValue;
-                Globals.player.homeGrid[(int)positionArray[i].x][(int)positionArray[i].y].shipIndex = shipIndex;
+                Globals.player.homeGrid[(int)positionArray[i].X][(int)positionArray[i].Y].HasShip = updateValue;
+                Globals.player.homeGrid[(int)positionArray[i].X][(int)positionArray[i].Y].ShipIndex = shipIndex;
             }
         }
 
-        public bool updateAlive()
+        public bool UpdateAlive()
         {
-            if (alive)
+            if (Alive)
             {
-                if (shotCounter == length)
+                if (ShotCounter == Length)
                 {
-                    alive = false;
+                    Alive = false;
                     return true;
                 }
             }
             return false;
         }
 
-        public void updateSpecialAttacksLeft()
+        public void UpdateSpecialAttacksLeft()
         {
-            if (shipName.Equals("Scanner") || shipName.Equals("Defender"))
-                specialAttacksLeft = 2;
-            else if (shipName.Equals("Submarine") || shipName.Equals("Cruiser"))
+            if (ShipName.Equals("Scanner") || ShipName.Equals("Defender"))
+                SpecialAttacksLeft = 2;
+            else if (ShipName.Equals("Submarine") || ShipName.Equals("Cruiser"))
             {
-                specialAttacksLeft = 0;
-                firstHit = true;
+                SpecialAttacksLeft = 0;
+                FirstHit = true;
             }
         }
 
-        public Point[] updatePosArray()
+        public Point[] UpdatePosArray()
         {
-            Point[] pos = new Point[length];
+            Point[] pos = new Point[Length];
             pos[0] = mainPoint;
-            for (int i = 1; i < length; i++)
+            for (int i = 1; i < Length; i++)
             {
-                if (vertical)
-                    pos[i] = new Point(mainPoint.x, mainPoint.y + i);
+                if (Vertical)
+                    pos[i] = new Point(mainPoint.X, mainPoint.Y + i);
                 else
-                    pos[i] = new Point(mainPoint.x + i, mainPoint.y);
+                    pos[i] = new Point(mainPoint.X + i, mainPoint.Y);
             }
             return pos;
         }
 
-        public bool containsPoint(Point inputPoint)
+        public bool ContainsPoint(Point inputPoint)
         {
-            for (int i = 0; i < length; i++)
+            for (int i = 0; i < Length; i++)
             {
                 if (positionArray[i].Equals(inputPoint))
                     return true;
@@ -314,9 +315,9 @@ namespace SeasAtWar
             return false;
         }
 
-        public int rotate()
+        public int Rotate()
         {
-            Tuple<Point[], bool> result = getRotationPosition();
+            Tuple<Point[], bool> result = GetRotationPosition();
             Point[] rotationArray = result.Item1;
             bool rotateSuccess = result.Item2;
             if (rotationArray.Length > 0)
@@ -324,18 +325,18 @@ namespace SeasAtWar
                 if (!rotateSuccess)
                     return 1;
 
-                vertical = !vertical;
-                updateHomeGrid(false, -1);
+                Vertical = !Vertical;
+                UpdateHomeGrid(false, -1);
                 positionArray = rotationArray;
-                updateHomeGrid(true, length - 2);
+                UpdateHomeGrid(true, Length - 2);
                 return 0;
             }
             return -1;
         }
 
-        public int move(Point newMainPoint)
+        public int Move(Point newMainPoint)
         {
-            Tuple<Point[], bool> result = getMovePosition(newMainPoint);
+            Tuple<Point[], bool> result = GetMovePosition(newMainPoint);
             Point[] moveArray = result.Item1;
             bool moveSuccess = result.Item2;
             if (moveArray.Length > 0)
@@ -343,10 +344,10 @@ namespace SeasAtWar
                 if (!moveSuccess)
                     return 1; //fail, but in game board
 
-                updateHomeGrid(false, -1);
+                UpdateHomeGrid(false, -1);
                 mainPoint = newMainPoint;
                 positionArray = moveArray;
-                updateHomeGrid(true, length - 2);
+                UpdateHomeGrid(true, Length - 2);
                 return 0; //success
             }
             return -1; //outside of game board
@@ -375,7 +376,7 @@ namespace SeasAtWar
                     connected = true;
                 }
             });
-            Globals.socket.On("disconnect", async () =>
+            /*Globals.socket.On("disconnect", async () =>
             {
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
@@ -394,7 +395,7 @@ namespace SeasAtWar
                         CoreApplication.Exit();
                     }
                 });
-            });
+            });*/
             Globals.socket.Emit("new player", "");
         }
 
@@ -412,18 +413,19 @@ namespace SeasAtWar
             {
                 DebugSettings.EnableFrameRateCounter = true;
             }
-#endif
-            Frame rootFrame = Window.Current.Content as Frame;
 
+#endif
             // Do not repeat app initialization when the Window already has content,
             // just ensure that the window is active
-            if (rootFrame == null)
+            if (!(Window.Current.Content is Frame rootFrame))
             {
                 // Create a Frame to act as the navigation context and navigate to the first page
                 rootFrame = new Frame();
 
-                SolidColorBrush scb = new SolidColorBrush();
-                scb.Color = Windows.UI.Colors.Black;
+                SolidColorBrush scb = new SolidColorBrush
+                {
+                    Color = Windows.UI.Colors.Black
+                };
                 rootFrame.Background = scb;
 
                 rootFrame.NavigationFailed += OnNavigationFailed;

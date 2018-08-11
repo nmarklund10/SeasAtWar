@@ -30,7 +30,7 @@ namespace SeasAtWar
             publicText.Text = "Searching for other player...";
         }
 
-        private void cancelSearch_Click(object sender, RoutedEventArgs e)
+        private void CancelSearch_Click(object sender, RoutedEventArgs e)
         {
             Globals.socket.Off(Globals.PlayerID + " join success");
             Globals.socket.Emit("remove from public queue", Globals.PlayerID);

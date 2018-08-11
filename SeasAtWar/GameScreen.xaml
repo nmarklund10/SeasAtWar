@@ -13,6 +13,6 @@
         <Grid.Background>
             <ImageBrush ImageSource="images/gameBoard.png" Stretch="Uniform"></ImageBrush>
         </Grid.Background>
-        <canvas:CanvasAnimatedControl x:Name="screenCanvas" Draw="screenCanvas_Draw"  CreateResources="screenCanvas_CreateResources"/>
+        <canvas:CanvasAnimatedControl x:Name="screenCanvas" Draw="ScreenCanvas_Draw"  CreateResources="ScreenCanvas_CreateResources"/>
     </Grid>
 </Page>

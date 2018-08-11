@@ -33,7 +33,7 @@ namespace SeasAtWar
         public GameScreen()
         {
             InitializeComponent();
-            Globals.player.loadGrid("target", new Point(adjust(710), adjust(30)), adjust(70));
+            Globals.player.LoadGrid("target", new Point(Adjust(710), Adjust(30)), Adjust(70));
             gameBoard.PointerMoved += Grid_PointerMoved;
             gameBoard.PointerPressed += Grid_PointerPressed;
             gameBoard.PointerReleased += Grid_PointerReleased;
@@ -47,7 +47,7 @@ namespace SeasAtWar
         private void Grid_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             Windows.UI.Input.PointerPoint pointer = e.GetCurrentPoint(gameBoard);
-            Tuple<Point, string> result = getGridPosition(pointer);
+            Tuple<Point, string> result = GetGridPosition(pointer);
             Point pointerPosition = result.Item1;
             string pointerGrid = result.Item2;
             if (pointerGrid.Equals("home"))
@@ -74,27 +74,27 @@ namespace SeasAtWar
         private void Grid_PointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             Windows.UI.Input.PointerPoint pointer = e.GetCurrentPoint(gameBoard);
-            Tuple<Point, string> result = getGridPosition(pointer);
+            Tuple<Point, string> result = GetGridPosition(pointer);
             Point pointerPosition = result.Item1;
             string pointerGrid = result.Item2;
             lock (hoverLock)
             {
-                getHoveredShip(pointerPosition, pointerGrid);
+                GetHoveredShip(pointerPosition, pointerGrid);
             }
             lock(tileLock)
             {
-                getHoveredTile(pointerPosition, pointerGrid);
+                GetHoveredTile(pointerPosition, pointerGrid);
             }
         }
 
-        private void getHoveredShip(Point pointerPosition, string pointerGrid)
+        private void GetHoveredShip(Point pointerPosition, string pointerGrid)
         {
-            if (pointerPosition.x > -1 && pointerGrid.Equals("home"))
+            if (pointerPosition.X > -1 && pointerGrid.Equals("home"))
             {
                 bool pointerOverShip = false;
                 for (int i = 0; i < Globals.player.fleet.Length; i++)
                 {
-                    if (Globals.player.fleet[i].containsPoint(pointerPosition))
+                    if (Globals.player.fleet[i].ContainsPoint(pointerPosition))
                     {
                         hoveredShip = Globals.player.fleet[i];
                         pointerOverShip = true;
@@ -112,12 +112,12 @@ namespace SeasAtWar
                 hoveredShip = null;
         }
 
-        private void getHoveredTile(Point pointerPosition, string pointerGrid)
+        private void GetHoveredTile(Point pointerPosition, string pointerGrid)
         {
             if (clickedShip != null)
             {
-                if (pointerPosition.x > -1 && pointerGrid.Equals("target"))
-                    hoveredTile = Globals.player.targetGrid[(int)pointerPosition.x][(int)pointerPosition.y];
+                if (pointerPosition.X > -1 && pointerGrid.Equals("target"))
+                    hoveredTile = Globals.player.targetGrid[(int)pointerPosition.X][(int)pointerPosition.Y];
                 else
                     hoveredTile = null;
             }
@@ -128,36 +128,36 @@ namespace SeasAtWar
             }
         }
 
-        private Tuple<Point, string> getGridPosition(Windows.UI.Input.PointerPoint pointerPosition)
+        private Tuple<Point, string> GetGridPosition(Windows.UI.Input.PointerPoint pointerPosition)
         {
             double x = pointerPosition.Position.X;
             double y = pointerPosition.Position.Y;
             string grid = "";
-            if (y >= adjust(30) && y <= adjust(660))
+            if (y >= Adjust(30) && y <= Adjust(660))
             {
-                if (x >= adjust(40) && x <= adjust(670))  //home grid
+                if (x >= Adjust(40) && x <= Adjust(670))  //home grid
                 {
-                    x = x - adjust(40);
+                    x = x - Adjust(40);
                     grid = "home";
                 }
-                else if (x >= adjust(710) && x <= adjust(1340))  //target grid
+                else if (x >= Adjust(710) && x <= Adjust(1340))  //target grid
                 {
-                    x = x - adjust(710);
+                    x = x - Adjust(710);
                     grid = "target";
                 }
                 else
                     return new Tuple<Point, string>(new Point(-1, -1), grid);
-                y = y - adjust(30);
+                y = y - Adjust(30);
                 bool xSet = false;
                 bool ySet = false;
                 for (int i = 0; i < 9; i++)
                 {
-                    if (x <= adjust(70 * (i + 1)) && !xSet)
+                    if (x <= Adjust(70 * (i + 1)) && !xSet)
                     {
                         x = i;
                         xSet = true;
                     }
-                    if (y <= adjust(70 * (i + 1)) && !ySet)
+                    if (y <= Adjust(70 * (i + 1)) && !ySet)
                     {
                         y = i;
                         ySet = true;
@@ -170,21 +170,21 @@ namespace SeasAtWar
             return new Tuple<Point, string>(new Point(-1, -1), grid);
         }
 
-        private double adjust(double arg)
+        private double Adjust(double arg)
         {
             return arg * scale;
         }
 
-        private void drawSelectRectangle(Ship s, CanvasAnimatedDrawEventArgs args)
+        private void DrawSelectRectangle(Ship s, CanvasAnimatedDrawEventArgs args)
         {
-            float drawX = (float)Globals.player.homeGrid[(int)(s.mainPoint.x)][(int)(s.mainPoint.y)].screenPoint.x;
-            float drawY = (float)Globals.player.homeGrid[(int)(s.mainPoint.x)][(int)(s.mainPoint.y)].screenPoint.y;
-            float imageWidth = (float)shipImages[s.length - 2].GetBounds(screenCanvas).Width;
-            float imageHeight = (float)shipImages[s.length - 2].GetBounds(screenCanvas).Height;
+            float drawX = (float)Globals.player.homeGrid[(int)(s.mainPoint.X)][(int)(s.mainPoint.Y)].ScreenPoint.X;
+            float drawY = (float)Globals.player.homeGrid[(int)(s.mainPoint.X)][(int)(s.mainPoint.Y)].ScreenPoint.Y;
+            float imageWidth = (float)shipImages[s.Length - 2].GetBounds(screenCanvas).Width;
+            float imageHeight = (float)shipImages[s.Length - 2].GetBounds(screenCanvas).Height;
             args.DrawingSession.DrawRectangle(drawX, drawY, imageWidth, imageHeight, Windows.UI.Colors.Red, 3);
         }
 
-        private void screenCanvas_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
+        private void ScreenCanvas_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
         {
             if (Globals.DrawReady)
             {
@@ -194,11 +194,11 @@ namespace SeasAtWar
                     {
                         if (Globals.player.fleet[i] != null)
                         {
-                            double x = Globals.player.fleet[i].mainPoint.x;
-                            double y = Globals.player.fleet[i].mainPoint.y;
-                            float xPos = (float)Globals.player.homeGrid[(int)x][(int)y].screenPoint.x;
-                            float yPos = (float)Globals.player.homeGrid[(int)x][(int)y].screenPoint.y;
-                            if (!Globals.player.hasTurn)
+                            double x = Globals.player.fleet[i].mainPoint.X;
+                            double y = Globals.player.fleet[i].mainPoint.Y;
+                            float xPos = (float)Globals.player.homeGrid[(int)x][(int)y].ScreenPoint.X;
+                            float yPos = (float)Globals.player.homeGrid[(int)x][(int)y].ScreenPoint.Y;
+                            if (!Globals.player.HasTurn)
                                 args.DrawingSession.DrawImage(transparentShips[i], xPos, yPos);
                             else
                             {
@@ -208,28 +208,28 @@ namespace SeasAtWar
                         }
                     }
                 }
-                if (Globals.player.hasTurn)
+                if (Globals.player.HasTurn)
                 {
                     lock (clickedLock)
                     {
                         if (clickedShip != null)
-                            drawSelectRectangle(clickedShip, args);
+                            DrawSelectRectangle(clickedShip, args);
                     }
                     lock (hoverLock)
                     {
                         if (hoveredShip != null && hoveredShip != clickedShip)
-                            drawSelectRectangle(hoveredShip, args);
+                            DrawSelectRectangle(hoveredShip, args);
                     }
                     lock (tileLock)
                     {
                         if (hoveredTile != null)
-                            args.DrawingSession.DrawRectangle((float)hoveredTile.screenPoint.x, (float)hoveredTile.screenPoint.y, (float)adjust(70), (float)adjust(70), Windows.UI.Colors.Red, 3);
+                            args.DrawingSession.DrawRectangle((float)hoveredTile.ScreenPoint.X, (float)hoveredTile.ScreenPoint.Y, (float)Adjust(70), (float)Adjust(70), Windows.UI.Colors.Red, 3);
                     }
                 }
             }
         }
 
-        private void screenCanvas_CreateResources(CanvasAnimatedControl sender, CanvasCreateResourcesEventArgs args)
+        private void ScreenCanvas_CreateResources(CanvasAnimatedControl sender, CanvasCreateResourcesEventArgs args)
         {
             args.TrackAsyncAction(CreateResourcesAsync(sender).AsAsyncAction());
         }
@@ -239,44 +239,52 @@ namespace SeasAtWar
             for (int i = 0; i < shipImages.Length; i++)
             {
                 string fileName;
-                if (Globals.player.fleet[i].vertical)
-                    fileName = "images/Ships/ship" + (i + 2) + Globals.player.fleet[i].shipName + ".png";
+                if (Globals.player.fleet[i].Vertical)
+                    fileName = "images/Ships/ship" + (i + 2) + Globals.player.fleet[i].ShipName + ".png";
                 else
-                    fileName = "images/Ships/ship" + (i + 2) + Globals.player.fleet[i].shipName + "Hor.png";
+                    fileName = "images/Ships/ship" + (i + 2) + Globals.player.fleet[i].ShipName + "Hor.png";
                 var originalImage = await CanvasBitmap.LoadAsync(sender, fileName);
-                shipImages[i] = scaleImage(originalImage);
-                shipShadows[i] = getShipShadow(i);
-                var transShip = new OpacityEffect();
-                transShip.Source = shipImages[i];
-                transShip.Opacity = (float) 0.8;
-                transparentShips[i] = transShip;
-                var transShadow = new OpacityEffect();
-                transShadow.Source = shipShadows[i];
-                transShadow.Opacity = (float)0.8;
-                transparentShadows[i] = transShadow;
-                if (Globals.player.fleet[i].shipName.Equals("Submarine"))
+                shipImages[i] = ScaleImage(originalImage);
+                shipShadows[i] = GetShipShadow(i);
+                var transShip = new OpacityEffect
                 {
-                    if (Globals.player.fleet[i].vertical)
+                    Source = shipImages[i],
+                    Opacity = (float)0.8
+                };
+                transparentShips[i] = transShip;
+                var transShadow = new OpacityEffect
+                {
+                    Source = shipShadows[i],
+                    Opacity = (float)0.8
+                };
+                transparentShadows[i] = transShadow;
+                if (Globals.player.fleet[i].ShipName.Equals("Submarine"))
+                {
+                    if (Globals.player.fleet[i].Vertical)
                         originalImage = await CanvasBitmap.LoadAsync(sender, "images/Ships/ship3SubmarineHor.png");
                     else
                         originalImage = await CanvasBitmap.LoadAsync(sender, "images/Ships/ship3Submarine.png");
-                    alternateSubmarine = scaleImage(originalImage);
+                    alternateSubmarine = ScaleImage(originalImage);
                 }
             }
         }
 
-        private ICanvasImage scaleImage(ICanvasImage image)
+        private ICanvasImage ScaleImage(ICanvasImage image)
         {
-            var scaleEffect = new ScaleEffect();
-            scaleEffect.Source = image;
-            scaleEffect.Scale = new Vector2((float)scale, (float)scale);
+            var scaleEffect = new ScaleEffect
+            {
+                Source = image,
+                Scale = new Vector2((float)scale, (float)scale)
+            };
             return scaleEffect;
         }
 
-        private ICanvasImage getShipShadow(int index)
+        private ICanvasImage GetShipShadow(int index)
         {
-            var shadowEffect = new ShadowEffect();
-            shadowEffect.Source = shipImages[index];
+            var shadowEffect = new ShadowEffect
+            {
+                Source = shipImages[index]
+            };
             var finalShadow = new Transform2DEffect
             {
                 Source = shadowEffect,

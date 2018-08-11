@@ -12,18 +12,18 @@
         <Grid.Background>
             <ImageBrush ImageSource="images/shipSelect.png" Stretch="Uniform"></ImageBrush>
         </Grid.Background>
-        <canvas:CanvasAnimatedControl x:Name="screenCanvas" Draw="canvas_Draw" CreateResources="canvas_CreateResources"/>
+        <canvas:CanvasAnimatedControl x:Name="screenCanvas" Draw="Canvas_Draw" CreateResources="Canvas_CreateResources"/>
 
         <TextBlock x:Name="title" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Ship Select" VerticalAlignment="Top" Margin="540,17,0,0" Height="45" Width="275" Foreground="White" FontFamily="Stencil" FontSize="45" TextAlignment="Center"/>
-        <Button x:Name="quit" Content="Quit" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1117,587,0,0" Style="{StaticResource sawMainStyle}" Height="66" Width="123" FontSize="35" Click="quit_Click"/>
-        <Button x:Name="Scrambler" Content="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="500,115,0,0" Style="{StaticResource SaWGameStyle}" Height="45" Width="45" FontSize="30" Click="shipSelect_Click"/>
-        <Button x:Name="Scanner" Content="2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="500,170,0,0" Style="{StaticResource SaWGameStyle}" Height="45" Width="45" FontSize="30" Click="shipSelect_Click"/>
-        <Button x:Name="Submarine" Content="3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="500,260,0,0" Style="{StaticResource SaWGameStyle}" Height="45" Width="45" FontSize="30" Click="shipSelect_Click"/>
-        <Button x:Name="Defender" Content="4" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="500,315,0,0" Style="{StaticResource SaWGameStyle}" Height="45" Width="45" FontSize="30" Click="shipSelect_Click"/>
-        <Button x:Name="Cruiser" Content="5" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="500,405,0,0" Style="{StaticResource SaWGameStyle}" Height="45" Width="45" FontSize="30" Click="shipSelect_Click"/>
-        <Button x:Name="Carrier" Content="6" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="500,460,0,0" Style="{StaticResource SaWGameStyle}" Height="45" Width="45" FontSize="30" Click="shipSelect_Click"/>
-        <Button x:Name="Executioner" Content="7" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="500,550,0,0" Style="{StaticResource SaWGameStyle}" Height="45" Width="45" FontSize="30" Click="shipSelect_Click"/>
-        <Button x:Name="Artillery" Content="8" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="500,605,0,0" Style="{StaticResource SaWGameStyle}" Height="45" Width="45" FontSize="30" Click="shipSelect_Click"/>
+        <Button x:Name="quit" Content="Quit" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="1117,587,0,0" Style="{StaticResource sawMainStyle}" Height="66" Width="123" FontSize="35" Click="Quit_Click"/>
+        <Button x:Name="Scrambler" Content="1" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="500,115,0,0" Style="{StaticResource SaWGameStyle}" Height="45" Width="45" FontSize="30" Click="ShipSelect_Click"/>
+        <Button x:Name="Scanner" Content="2" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="500,170,0,0" Style="{StaticResource SaWGameStyle}" Height="45" Width="45" FontSize="30" Click="ShipSelect_Click"/>
+        <Button x:Name="Submarine" Content="3" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="500,260,0,0" Style="{StaticResource SaWGameStyle}" Height="45" Width="45" FontSize="30" Click="ShipSelect_Click"/>
+        <Button x:Name="Defender" Content="4" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="500,315,0,0" Style="{StaticResource SaWGameStyle}" Height="45" Width="45" FontSize="30" Click="ShipSelect_Click"/>
+        <Button x:Name="Cruiser" Content="5" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="500,405,0,0" Style="{StaticResource SaWGameStyle}" Height="45" Width="45" FontSize="30" Click="ShipSelect_Click"/>
+        <Button x:Name="Carrier" Content="6" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="500,460,0,0" Style="{StaticResource SaWGameStyle}" Height="45" Width="45" FontSize="30" Click="ShipSelect_Click"/>
+        <Button x:Name="Executioner" Content="7" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="500,550,0,0" Style="{StaticResource SaWGameStyle}" Height="45" Width="45" FontSize="30" Click="ShipSelect_Click"/>
+        <Button x:Name="Artillery" Content="8" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="500,605,0,0" Style="{StaticResource SaWGameStyle}" Height="45" Width="45" FontSize="30" Click="ShipSelect_Click"/>
         <TextBlock x:Name="class2" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Class 2" VerticalAlignment="Top" Margin="500,76,0,0" Foreground="White" FontSize="30" FontFamily="Stencil"/>
         <TextBlock x:Name="class3" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Class 3" VerticalAlignment="Top" Margin="500,221,0,0" Foreground="White" FontSize="30" FontFamily="Stencil"/>
         <TextBlock x:Name="class4" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Class 4" VerticalAlignment="Top" Margin="500,366,0,0" Foreground="White" FontSize="30" FontFamily="Stencil"/>

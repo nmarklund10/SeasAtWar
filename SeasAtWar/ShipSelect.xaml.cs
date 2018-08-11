@@ -66,7 +66,7 @@ namespace SeasAtWar
                     Frame.Navigate(typeof(MainMenu));
                 });
                 Globals.socket.Off(Globals.GameID + " player disconnect");
-                Globals.player.clearGrids();
+                Globals.player.ClearGrids();
                 Globals.player.fleet = new Ship[4];
                 Globals.GameID = -1;
             });
@@ -75,7 +75,7 @@ namespace SeasAtWar
             gameBoard.PointerReleased += GameBoard_PointerReleased;
             gameBoard.DoubleTapped += GameBoard_DoubleTapped;
             InitializeShipDescriptions();
-            Globals.player.loadGrid("home", new Point(adjust(40), adjust(30)), adjust(70));
+            Globals.player.LoadGrid("home", new Point(Adjust(40), Adjust(30)), Adjust(70));
             Globals.player.fleet = new Ship[4] 
             {
                 new Ship("temp2", 2, new Point(5, 3)),
@@ -84,10 +84,10 @@ namespace SeasAtWar
                 new Ship("temp5", 5, new Point(2, 3))
             };
             instructionsText = shipDescriptionDetails.Text;
-            timer = new Timer(timerCallback, null, 0, 1000);
+            timer = new Timer(TimerCallback, null, 0, 1000);
         }
 
-        private async void timerCallback(object state)
+        private async void TimerCallback(object state)
         {
             await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
@@ -122,16 +122,16 @@ namespace SeasAtWar
             {
                 if (clickedShip != null)
                 {
-                    if (clickedShip.shipName.Contains("temp"))
+                    if (clickedShip.ShipName.Contains("temp"))
                         return;
-                    var rotateResult = clickedShip.rotate();
+                    var rotateResult = clickedShip.Rotate();
                     if (rotateResult == 0)
                     {
-                        if (!clickedShip.vertical)
-                            shipImages[clickedShip.length - 2] = horizontalShips[Array.IndexOf(shipNames, clickedShip.shipName)];
+                        if (!clickedShip.Vertical)
+                            shipImages[clickedShip.Length - 2] = horizontalShips[Array.IndexOf(shipNames, clickedShip.ShipName)];
                         else
-                            shipImages[clickedShip.length - 2] = verticalShips[Array.IndexOf(shipNames, clickedShip.shipName)];
-                        shipShadows[clickedShip.length - 2] = getShipShadow(clickedShip.length - 2);
+                            shipImages[clickedShip.Length - 2] = verticalShips[Array.IndexOf(shipNames, clickedShip.ShipName)];
+                        shipShadows[clickedShip.Length - 2] = GetShipShadow(clickedShip.Length - 2);
                     }
                 }
             }
@@ -140,7 +140,7 @@ namespace SeasAtWar
         private void GameBoard_PointerReleased(object sender, PointerRoutedEventArgs e)
         {
             Windows.UI.Input.PointerPoint pointer = e.GetCurrentPoint(gameBoard);
-            Point pointerPosition = getGridPosition(pointer);
+            Point pointerPosition = GetGridPosition(pointer);
             lock (clickedLock)
             {
                 moveError = null;
@@ -149,9 +149,9 @@ namespace SeasAtWar
             }
             lock (hoverLock)
             {
-                getHoveredShip(pointerPosition);
+                GetHoveredShip(pointerPosition);
                 if (hoveredShip != null)
-                    showDescriptionText();
+                    ShowDescriptionText();
             }
         }
 
@@ -163,16 +163,16 @@ namespace SeasAtWar
                     return;
             }
             Windows.UI.Input.PointerPoint pointer = e.GetCurrentPoint(gameBoard);
-            Point pointerPosition = getGridPosition(pointer);
-            if (pointerPosition.x > -1)
+            Point pointerPosition = GetGridPosition(pointer);
+            if (pointerPosition.X > -1)
             {
                 lock(clickedLock)
                 {
                     for (int i = 0; i < Globals.player.fleet.Length; i++)
                     {
-                        if (Globals.player.fleet[i].containsPoint(pointerPosition))
+                        if (Globals.player.fleet[i].ContainsPoint(pointerPosition))
                         {
-                            if (!Globals.player.fleet[i].shipName.Contains("temp"))
+                            if (!Globals.player.fleet[i].ShipName.Contains("temp"))
                             {
                                 clickedShip = Globals.player.fleet[i];
                                 clickedShipTile = Array.IndexOf(clickedShip.positionArray, pointerPosition);
@@ -183,7 +183,7 @@ namespace SeasAtWar
                                 break;
                             }
                             else
-                                showErrorText();
+                                ShowErrorText();
                         }
                     }
                     if (clickedShip == null)
@@ -192,7 +192,7 @@ namespace SeasAtWar
             }
         }
 
-        private void showErrorText()
+        private void ShowErrorText()
         {
             shipDescriptionTitle.Text = "";
             shipDescriptionDetails.TextAlignment = TextAlignment.Center;
@@ -200,7 +200,7 @@ namespace SeasAtWar
             shipDescriptionDetails.Text = errorText;
         }
 
-        private void showInstructionsText()
+        private void ShowInstructionsText()
         {
             shipDescriptionTitle.Text = "Controls";
             shipDescriptionDetails.TextAlignment = TextAlignment.Left;
@@ -208,16 +208,16 @@ namespace SeasAtWar
             shipDescriptionDetails.Text = instructionsText;
         }
 
-        private void showDescriptionText()
+        private void ShowDescriptionText()
         {
             shipDescriptionDetails.TextAlignment = TextAlignment.Left;
             shipDescriptionDetails.Foreground = new SolidColorBrush(Windows.UI.Colors.White);
-            int index = Array.IndexOf(shipNames, hoveredShip.shipName);
+            int index = Array.IndexOf(shipNames, hoveredShip.ShipName);
             shipDescriptionTitle.Text = shipSpecialNames[index];
             shipDescriptionDetails.Text = shipDescriptions[index];
         }
 
-        private double adjust(double arg)
+        private double Adjust(double arg)
         {
             return arg * scale;
         }
@@ -225,21 +225,21 @@ namespace SeasAtWar
         private void GameBoard_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
             Windows.UI.Input.PointerPoint pointer = e.GetCurrentPoint(gameBoard);
-            Point pointerPosition = getGridPosition(pointer);
+            Point pointerPosition = GetGridPosition(pointer);
             lock (hoverLock)
             {
-                getHoveredShip(pointerPosition);
+                GetHoveredShip(pointerPosition);
             }
             lock (clickedLock)
             {
-                if (clickedShip != null && pointerPosition.x > -1)
+                if (clickedShip != null && pointerPosition.X > -1)
                 {
                     Point newMainPoint;
-                    if (clickedShip.vertical)
-                        newMainPoint = new Point(pointerPosition.x, pointerPosition.y - clickedShipTile);
+                    if (clickedShip.Vertical)
+                        newMainPoint = new Point(pointerPosition.X, pointerPosition.Y - clickedShipTile);
                     else
-                        newMainPoint = new Point(pointerPosition.x - clickedShipTile, pointerPosition.y);
-                    int result = clickedShip.move(newMainPoint);
+                        newMainPoint = new Point(pointerPosition.X - clickedShipTile, pointerPosition.Y);
+                    int result = clickedShip.Move(newMainPoint);
                     if (result == 1)
                         moveError = new Tuple<Point, int>(newMainPoint, 5);
                     else
@@ -248,9 +248,9 @@ namespace SeasAtWar
             }
         }
 
-        private void getHoveredShip(Point pointerPosition)
+        private void GetHoveredShip(Point pointerPosition)
         { 
-            if (pointerPosition.x > -1)
+            if (pointerPosition.X > -1)
             {
                 lock (clickedLock)
                 {
@@ -259,23 +259,23 @@ namespace SeasAtWar
                         bool pointerOverShip = false;
                         for (int i = 0; i < Globals.player.fleet.Length; i++)
                         {
-                            if (Globals.player.fleet[i].containsPoint(pointerPosition))
+                            if (Globals.player.fleet[i].ContainsPoint(pointerPosition))
                             {
-                                if (Globals.player.fleet[i].shipName.Contains("temp"))
+                                if (Globals.player.fleet[i].ShipName.Contains("temp"))
                                 {
                                     hoveredShip = null;
-                                    showErrorText();
+                                    ShowErrorText();
                                     return;
                                 }
                                 hoveredShip = Globals.player.fleet[i];
                                 pointerOverShip = true;
-                                showDescriptionText();
+                                ShowDescriptionText();
                                 break;
                             }
                         }
                         if (!pointerOverShip)
                         {
-                            showInstructionsText();
+                            ShowInstructionsText();
                             hoveredShip = null;
                         }
                     }
@@ -283,24 +283,24 @@ namespace SeasAtWar
             }
         }
 
-        private Point getGridPosition(Windows.UI.Input.PointerPoint pointerPosition)
+        private Point GetGridPosition(Windows.UI.Input.PointerPoint pointerPosition)
         {
             double x = pointerPosition.Position.X;
             double y = pointerPosition.Position.Y;
-            if (x >= adjust(40) && x <= adjust(670) && y >= adjust(30) && y <= adjust(660))
+            if (x >= Adjust(40) && x <= Adjust(670) && y >= Adjust(30) && y <= Adjust(660))
             {
-                x = x - adjust(40);
-                y = y - adjust(30);
+                x = x - Adjust(40);
+                y = y - Adjust(30);
                 bool xSet = false;
                 bool ySet = false;
                 for (int i = 0; i < 9; i++)
                 {
-                    if (x <= adjust(70 * (i + 1)) && !xSet)
+                    if (x <= Adjust(70 * (i + 1)) && !xSet)
                     {
                         x = i;
                         xSet = true;
                     }
-                    if (y <= adjust(70 * (i + 1)) && !ySet)
+                    if (y <= Adjust(70 * (i + 1)) && !ySet)
                     {
                         y = i;
                         ySet = true;
@@ -313,17 +313,17 @@ namespace SeasAtWar
             return new Point(-1, -1);
         }
 
-        private void quit_Click(object sender, RoutedEventArgs e)
+        private void Quit_Click(object sender, RoutedEventArgs e)
         {
             Globals.socket.Off(Globals.GameID + " player disconnect");
             Globals.socket.Emit("quit game", Globals.GameID);
             Frame.Navigate(typeof(MainMenu));
-            Globals.player.clearGrids();
+            Globals.player.ClearGrids();
             Globals.player.fleet = new Ship[4];
             Globals.GameID = -1;
         }
 
-        private void canvas_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
+        private void Canvas_Draw(ICanvasAnimatedControl sender, CanvasAnimatedDrawEventArgs args)
         {
             if (Globals.DrawReady)
             {
@@ -333,10 +333,10 @@ namespace SeasAtWar
                     {
                         if (Globals.player.fleet[i] != null)
                         {
-                            double x = Globals.player.fleet[i].mainPoint.x;
-                            double y = Globals.player.fleet[i].mainPoint.y;
-                            float xPos = (float)Globals.player.homeGrid[(int)x][(int)y].screenPoint.x;
-                            float yPos = (float)Globals.player.homeGrid[(int)x][(int)y].screenPoint.y;
+                            double x = Globals.player.fleet[i].mainPoint.X;
+                            double y = Globals.player.fleet[i].mainPoint.Y;
+                            float xPos = (float)Globals.player.homeGrid[(int)x][(int)y].ScreenPoint.X;
+                            float yPos = (float)Globals.player.homeGrid[(int)x][(int)y].ScreenPoint.Y;
 
                             args.DrawingSession.DrawImage(shipShadows[i], xPos, yPos);
                             args.DrawingSession.DrawImage(shipImages[i], xPos, yPos);
@@ -347,15 +347,15 @@ namespace SeasAtWar
                 {
                     if (hoveredShip != null)
                     {
-                        float drawX = (float)Globals.player.homeGrid[(int)(hoveredShip.mainPoint.x)][(int)(hoveredShip.mainPoint.y)].screenPoint.x;
-                        float drawY = (float)Globals.player.homeGrid[(int)(hoveredShip.mainPoint.x)][(int)(hoveredShip.mainPoint.y)].screenPoint.y;
-                        float imageWidth = (float)shipImages[hoveredShip.length - 2].GetBounds(screenCanvas).Width;
-                        float imageHeight = (float)shipImages[hoveredShip.length - 2].GetBounds(screenCanvas).Height;
+                        float drawX = (float)Globals.player.homeGrid[(int)(hoveredShip.mainPoint.X)][(int)(hoveredShip.mainPoint.Y)].ScreenPoint.X;
+                        float drawY = (float)Globals.player.homeGrid[(int)(hoveredShip.mainPoint.X)][(int)(hoveredShip.mainPoint.Y)].ScreenPoint.Y;
+                        float imageWidth = (float)shipImages[hoveredShip.Length - 2].GetBounds(screenCanvas).Width;
+                        float imageHeight = (float)shipImages[hoveredShip.Length - 2].GetBounds(screenCanvas).Height;
                         args.DrawingSession.DrawRectangle(drawX, drawY, imageWidth, imageHeight, Windows.UI.Colors.Red, 3);
-                        var rotateResult = hoveredShip.getRotationPosition();
-                        int imageIndex = Array.IndexOf(shipNames, hoveredShip.shipName);
+                        var rotateResult = hoveredShip.GetRotationPosition();
+                        int imageIndex = Array.IndexOf(shipNames, hoveredShip.ShipName);
                         var transparentShip = new OpacityEffect();
-                        if (hoveredShip.vertical)
+                        if (hoveredShip.Vertical)
                             transparentShip.Source = horizontalShips[imageIndex];
                         else
                             transparentShip.Source = verticalShips[imageIndex];
@@ -364,9 +364,10 @@ namespace SeasAtWar
                             args.DrawingSession.DrawImage(transparentShip, drawX, drawY);
                         else if (rotateResult.Item1.Length > 0)
                         {
-                            var tintedShip = new TintEffect();
-                            tintedShip.Source = transparentShip;
-                            tintedShip.Color = Windows.UI.Colors.Red;
+                            var tintedShip = new TintEffect() {
+                                Source = transparentShip,
+                                Color = Windows.UI.Colors.Red
+                            };
                             args.DrawingSession.DrawImage(tintedShip, drawX, drawY);
                         }
                     }
@@ -375,14 +376,18 @@ namespace SeasAtWar
                 {
                     if (moveError != null)
                     {
-                        var tintedShip = new TintEffect();
-                        tintedShip.Source = shipImages[clickedShip.length - 2];
-                        tintedShip.Color = Windows.UI.Colors.Red;
-                        var transparentShip = new OpacityEffect();
-                        transparentShip.Source = tintedShip;
-                        transparentShip.Opacity = (float)0.75;
-                        float xPos = (float)Globals.player.homeGrid[(int)moveError.Item1.x][(int)moveError.Item1.y].screenPoint.x;
-                        float yPos = (float)Globals.player.homeGrid[(int)moveError.Item1.x][(int)moveError.Item1.y].screenPoint.y;
+                        var tintedShip = new TintEffect
+                        {
+                            Source = shipImages[clickedShip.Length - 2],
+                            Color = Windows.UI.Colors.Red
+                        };
+                        var transparentShip = new OpacityEffect
+                        {
+                            Source = tintedShip,
+                            Opacity = (float)0.75
+                        };
+                        float xPos = (float)Globals.player.homeGrid[(int)moveError.Item1.X][(int)moveError.Item1.Y].ScreenPoint.X;
+                        float yPos = (float)Globals.player.homeGrid[(int)moveError.Item1.X][(int)moveError.Item1.Y].ScreenPoint.Y;
                         args.DrawingSession.DrawImage(transparentShip, xPos, yPos);
                     }
                 }
@@ -395,7 +400,7 @@ namespace SeasAtWar
             screenCanvas = null;
         }
 
-        private void canvas_CreateResources(CanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
+        private void Canvas_CreateResources(CanvasAnimatedControl sender, Microsoft.Graphics.Canvas.UI.CanvasCreateResourcesEventArgs args)
         {
             args.TrackAsyncAction(CreateResourcesAsync(sender).AsAsyncAction());
         }
@@ -405,30 +410,34 @@ namespace SeasAtWar
             for (int i = 0; i < shipImages.Length; i++)
             {
                 var originalImage = await CanvasBitmap.LoadAsync(sender, "images/Ships/ship" + (i + 2) + "temp.png");
-                shipImages[i] = scaleImage(originalImage);
-                shipShadows[i] = getShipShadow(i);
+                shipImages[i] = ScaleImage(originalImage);
+                shipShadows[i] = GetShipShadow(i);
             }
             for (int i = 0; i < 8; i++)
             {
                 var originalImage = await CanvasBitmap.LoadAsync(sender, "images/Ships/ship" + ((i + 4) / 2) + shipSelectButtons[i].Name + ".png");
-                verticalShips[i] = scaleImage(originalImage);
+                verticalShips[i] = ScaleImage(originalImage);
                 originalImage = await CanvasBitmap.LoadAsync(sender, "images/Ships/ship" + ((i + 4) / 2) + shipSelectButtons[i].Name + "Hor.png");
-                horizontalShips[i] = scaleImage(originalImage);
+                horizontalShips[i] = ScaleImage(originalImage);
             }
         }
 
-        private ICanvasImage scaleImage(ICanvasImage image)
+        private ICanvasImage ScaleImage(ICanvasImage image)
         {
-            var scaleEffect = new ScaleEffect();
-            scaleEffect.Source = image;
-            scaleEffect.Scale = new Vector2((float)scale, (float)scale);
+            var scaleEffect = new ScaleEffect
+            {
+                Source = image,
+                Scale = new Vector2((float)scale, (float)scale)
+            };
             return scaleEffect;
         }
 
-        private ICanvasImage getShipShadow(int index)
+        private ICanvasImage GetShipShadow(int index)
         {
-            var shadowEffect = new ShadowEffect();
-            shadowEffect.Source = shipImages[index];
+            var shadowEffect = new ShadowEffect
+            {
+                Source = shipImages[index]
+            };
             var finalShadow = new Transform2DEffect
             {
                 Source = shadowEffect,
@@ -437,21 +446,21 @@ namespace SeasAtWar
             return finalShadow;
         }
 
-        private void shipSelect_Click(object sender, RoutedEventArgs e)
+        private void ShipSelect_Click(object sender, RoutedEventArgs e)
         {
             int shipIndex = (int.Parse((sender as Button).Content.ToString()) - 1) / 2;
             int imageIndex = Array.IndexOf(shipSelectButtons, sender);
-            Globals.player.fleet[shipIndex].shipName = shipSelectButtons[imageIndex].Name;
+            Globals.player.fleet[shipIndex].ShipName = shipSelectButtons[imageIndex].Name;
             (sender as Button).IsEnabled = false;
             if (imageIndex % 2 == 0)
                 shipSelectButtons[imageIndex + 1].IsEnabled = true;
             else
                 shipSelectButtons[imageIndex - 1].IsEnabled = true;
-            if (Globals.player.fleet[shipIndex].vertical)
+            if (Globals.player.fleet[shipIndex].Vertical)
                 shipImages[shipIndex] = verticalShips[imageIndex];
             else
                 shipImages[shipIndex] = horizontalShips[imageIndex];
-            shipShadows[shipIndex] = getShipShadow(shipIndex);
+            shipShadows[shipIndex] = GetShipShadow(shipIndex);
             shipDescriptionDetails.TextAlignment = TextAlignment.Left;
             shipDescriptionDetails.Foreground = new SolidColorBrush(Windows.UI.Colors.White);
             shipDescriptionTitle.Text = shipSpecialNames[imageIndex];
@@ -466,32 +475,32 @@ namespace SeasAtWar
             gameBoard.DoubleTapped -= GameBoard_DoubleTapped;
             for (int i = 0; i < Globals.player.fleet.Length; i++)
             {
-                if (Globals.player.fleet[i].shipName.Contains("temp"))
+                if (Globals.player.fleet[i].ShipName.Contains("temp"))
                 {
-                    if (Globals.player.fleet[i].length == 2)
+                    if (Globals.player.fleet[i].Length == 2)
                     {
-                        Globals.player.fleet[i].shipName = "Scrambler";
+                        Globals.player.fleet[i].ShipName = "Scrambler";
                         shipImages[0] = verticalShips[0];
-                        shipShadows[0] = getShipShadow(0);
+                        shipShadows[0] = GetShipShadow(0);
                     }
-                    else if (Globals.player.fleet[i].length == 3)
+                    else if (Globals.player.fleet[i].Length == 3)
                     {
-                        Globals.player.fleet[i].shipName = "Submarine";
+                        Globals.player.fleet[i].ShipName = "Submarine";
                         shipImages[1] = verticalShips[2];
-                        shipShadows[1] = getShipShadow(1);
+                        shipShadows[1] = GetShipShadow(1);
                     }
-                    else if (Globals.player.fleet[i].length == 4)
+                    else if (Globals.player.fleet[i].Length == 4)
                     {
-                        Globals.player.fleet[i].shipName = "Cruiser";
+                        Globals.player.fleet[i].ShipName = "Cruiser";
                         shipImages[2] = verticalShips[4];
-                        shipShadows[2] = getShipShadow(2);
+                        shipShadows[2] = GetShipShadow(2);
 
                     }
-                    else if (Globals.player.fleet[i].length == 5)
+                    else if (Globals.player.fleet[i].Length == 5)
                     {
-                        Globals.player.fleet[i].shipName = "Executioner";
+                        Globals.player.fleet[i].ShipName = "Executioner";
                         shipImages[3] = verticalShips[6];
-                        shipShadows[3] = getShipShadow(3);
+                        shipShadows[3] = GetShipShadow(3);
                     }
                 }
                 var transparent = new OpacityEffect
@@ -525,7 +534,7 @@ namespace SeasAtWar
             {
                 Globals.socket.Off(Globals.GameID + " ready");
                 if ((long)data == Globals.PlayerID)
-                    Globals.player.hasTurn = true;
+                    Globals.player.HasTurn = true;
                 await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
                 {
                     Frame.Navigate(typeof(GameScreen));
