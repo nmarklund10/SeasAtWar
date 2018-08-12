@@ -10,6 +10,10 @@ using Windows.Foundation;
 using Windows.ApplicationModel.Core;
 using System;
 using Windows.UI.Core;
+using Microsoft.Graphics.Canvas;
+using Microsoft.Graphics.Canvas.Effects;
+using System.Numerics;
+using System.Threading;
 
 namespace SeasAtWar
 {
@@ -24,6 +28,9 @@ namespace SeasAtWar
         public static Socket socket;
         public static Player player;
         public static bool DrawReady { get; set; }
+        public static double Scale { get; set; }
+        private static Timer ping_timer;
+        private static bool pinging = false;
         static Globals()
         {
             //socket = IO.Socket("https://seasatwar.herokuapp.com");
@@ -32,6 +39,44 @@ namespace SeasAtWar
             DrawReady = false;
             GameID = -1;
             player = new Player();
+        }
+
+        public static void StartPing()
+        {
+            if (!pinging)
+            {
+                ping_timer = new Timer(Ping, null, 0, 25000);
+                pinging = true;
+            }
+        }
+
+        public static void StopPing()
+        {
+            if (pinging)
+            {
+                ping_timer.Dispose();
+                pinging = false;
+            }
+        }
+
+        private static void Ping(object state)
+        {
+            socket.Emit("ping", "");
+        }
+
+        public static double Adjust(double arg)
+        {
+            return arg * Scale;
+        }
+        
+        public static ICanvasImage ScaleImage(ICanvasImage image)
+        {
+            var scaleEffect = new ScaleEffect
+            {
+                Source = image,
+                Scale = new Vector2((float)Scale, (float)Scale)
+            };
+            return scaleEffect;
         }
     }
 
@@ -363,7 +408,7 @@ namespace SeasAtWar
         private bool connected = false;
         private object connect_lock = new object();
         private bool dialog_open = false;
-        
+
         public App()
         {
             InitializeComponent();
@@ -375,8 +420,9 @@ namespace SeasAtWar
                 {
                     connected = true;
                 }
+                Globals.StartPing();
             });
-            /*Globals.socket.On("disconnect", async () =>
+            Globals.socket.On("disconnect", async () =>
             {
                 await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
                 {
@@ -391,11 +437,12 @@ namespace SeasAtWar
                             IsSecondaryButtonEnabled = false
                         };
                         var result = await dialog.ShowAsync();
+                        Globals.StopPing();
                         Globals.socket.Disconnect();
                         CoreApplication.Exit();
                     }
                 });
-            });*/
+            });
             Globals.socket.Emit("new player", "");
         }
 
@@ -487,7 +534,6 @@ namespace SeasAtWar
         {
             var deferral = e.SuspendingOperation.GetDeferral();
             //TODO: Save application state and stop any background activity
-            Globals.socket.Disconnect();
             deferral.Complete();
         }
     }

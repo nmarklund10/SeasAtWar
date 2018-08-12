@@ -1,12 +1,7 @@
 ﻿using System;
 using Windows.ApplicationModel.Core;
-using Windows.Foundation;
-using Windows.UI;
-using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Media.Imaging;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=402352&clcid=0x409
 
@@ -21,6 +16,7 @@ namespace SeasAtWar
         public MainMenu()
         {
             InitializeComponent();
+            Globals.Scale = Window.Current.Bounds.Width / 1920;
         }
         private void HostGame_Click(object sender, RoutedEventArgs e)
         {
@@ -40,6 +36,7 @@ namespace SeasAtWar
         }
         private void Exit_Click(object sender, RoutedEventArgs e)
         {
+            Globals.StopPing();
             Globals.socket.Disconnect();
             CoreApplication.Exit();
         }

@@ -75,7 +75,7 @@ namespace SeasAtWar
             gameBoard.PointerReleased += GameBoard_PointerReleased;
             gameBoard.DoubleTapped += GameBoard_DoubleTapped;
             InitializeShipDescriptions();
-            Globals.player.LoadGrid("home", new Point(Adjust(40), Adjust(30)), Adjust(70));
+            Globals.player.LoadGrid("home", new Point(Globals.Adjust(40), Globals.Adjust(30)), Globals.Adjust(70));
             Globals.player.fleet = new Ship[4] 
             {
                 new Ship("temp2", 2, new Point(5, 3)),
@@ -84,10 +84,10 @@ namespace SeasAtWar
                 new Ship("temp5", 5, new Point(2, 3))
             };
             instructionsText = shipDescriptionDetails.Text;
-            timer = new Timer(TimerCallback, null, 0, 1000);
+            timer = new Timer(TickTimer, null, 0, 1000);
         }
 
-        private async void TimerCallback(object state)
+        private async void TickTimer(object state)
         {
             await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
@@ -217,11 +217,6 @@ namespace SeasAtWar
             shipDescriptionDetails.Text = shipDescriptions[index];
         }
 
-        private double Adjust(double arg)
-        {
-            return arg * scale;
-        }
-
         private void GameBoard_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
             Windows.UI.Input.PointerPoint pointer = e.GetCurrentPoint(gameBoard);
@@ -287,20 +282,20 @@ namespace SeasAtWar
         {
             double x = pointerPosition.Position.X;
             double y = pointerPosition.Position.Y;
-            if (x >= Adjust(40) && x <= Adjust(670) && y >= Adjust(30) && y <= Adjust(660))
+            if (x >= Globals.Adjust(40) && x <= Globals.Adjust(670) && y >= Globals.Adjust(30) && y <= Globals.Adjust(660))
             {
-                x = x - Adjust(40);
-                y = y - Adjust(30);
+                x = x - Globals.Adjust(40);
+                y = y - Globals.Adjust(30);
                 bool xSet = false;
                 bool ySet = false;
                 for (int i = 0; i < 9; i++)
                 {
-                    if (x <= Adjust(70 * (i + 1)) && !xSet)
+                    if (x <= Globals.Adjust(70 * (i + 1)) && !xSet)
                     {
                         x = i;
                         xSet = true;
                     }
-                    if (y <= Adjust(70 * (i + 1)) && !ySet)
+                    if (y <= Globals.Adjust(70 * (i + 1)) && !ySet)
                     {
                         y = i;
                         ySet = true;
@@ -410,26 +405,16 @@ namespace SeasAtWar
             for (int i = 0; i < shipImages.Length; i++)
             {
                 var originalImage = await CanvasBitmap.LoadAsync(sender, "images/Ships/ship" + (i + 2) + "temp.png");
-                shipImages[i] = ScaleImage(originalImage);
+                shipImages[i] = Globals.ScaleImage(originalImage);
                 shipShadows[i] = GetShipShadow(i);
             }
             for (int i = 0; i < 8; i++)
             {
                 var originalImage = await CanvasBitmap.LoadAsync(sender, "images/Ships/ship" + ((i + 4) / 2) + shipSelectButtons[i].Name + ".png");
-                verticalShips[i] = ScaleImage(originalImage);
+                verticalShips[i] = Globals.ScaleImage(originalImage);
                 originalImage = await CanvasBitmap.LoadAsync(sender, "images/Ships/ship" + ((i + 4) / 2) + shipSelectButtons[i].Name + "Hor.png");
-                horizontalShips[i] = ScaleImage(originalImage);
+                horizontalShips[i] = Globals.ScaleImage(originalImage);
             }
-        }
-
-        private ICanvasImage ScaleImage(ICanvasImage image)
-        {
-            var scaleEffect = new ScaleEffect
-            {
-                Source = image,
-                Scale = new Vector2((float)scale, (float)scale)
-            };
-            return scaleEffect;
         }
 
         private ICanvasImage GetShipShadow(int index)

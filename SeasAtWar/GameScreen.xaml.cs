@@ -22,7 +22,6 @@ namespace SeasAtWar
         private ICanvasImage[] transparentShips = new ICanvasImage[4];
         private ICanvasImage[] transparentShadows = new ICanvasImage[4];
         private ICanvasImage alternateSubmarine;
-        private double scale = Window.Current.Bounds.Width / 1920;
         private object clickedLock = new object();
         private object hoverLock = new object();
         private object tileLock = new object();
@@ -33,7 +32,7 @@ namespace SeasAtWar
         public GameScreen()
         {
             InitializeComponent();
-            Globals.player.LoadGrid("target", new Point(Adjust(710), Adjust(30)), Adjust(70));
+            Globals.player.LoadGrid("target", new Point(Globals.Adjust(710), Globals.Adjust(30)), Globals.Adjust(70));
             gameBoard.PointerMoved += Grid_PointerMoved;
             gameBoard.PointerPressed += Grid_PointerPressed;
             gameBoard.PointerReleased += Grid_PointerReleased;
@@ -133,31 +132,31 @@ namespace SeasAtWar
             double x = pointerPosition.Position.X;
             double y = pointerPosition.Position.Y;
             string grid = "";
-            if (y >= Adjust(30) && y <= Adjust(660))
+            if (y >= Globals.Adjust(30) && y <= Globals.Adjust(660))
             {
-                if (x >= Adjust(40) && x <= Adjust(670))  //home grid
+                if (x >= Globals.Adjust(40) && x <= Globals.Adjust(670))  //home grid
                 {
-                    x = x - Adjust(40);
+                    x = x - Globals.Adjust(40);
                     grid = "home";
                 }
-                else if (x >= Adjust(710) && x <= Adjust(1340))  //target grid
+                else if (x >= Globals.Adjust(710) && x <= Globals.Adjust(1340))  //target grid
                 {
-                    x = x - Adjust(710);
+                    x = x - Globals.Adjust(710);
                     grid = "target";
                 }
                 else
                     return new Tuple<Point, string>(new Point(-1, -1), grid);
-                y = y - Adjust(30);
+                y = y - Globals.Adjust(30);
                 bool xSet = false;
                 bool ySet = false;
                 for (int i = 0; i < 9; i++)
                 {
-                    if (x <= Adjust(70 * (i + 1)) && !xSet)
+                    if (x <= Globals.Adjust(70 * (i + 1)) && !xSet)
                     {
                         x = i;
                         xSet = true;
                     }
-                    if (y <= Adjust(70 * (i + 1)) && !ySet)
+                    if (y <= Globals.Adjust(70 * (i + 1)) && !ySet)
                     {
                         y = i;
                         ySet = true;
@@ -168,11 +167,6 @@ namespace SeasAtWar
                 return new Tuple<Point, string>(new Point(x, y), grid);
             }
             return new Tuple<Point, string>(new Point(-1, -1), grid);
-        }
-
-        private double Adjust(double arg)
-        {
-            return arg * scale;
         }
 
         private void DrawSelectRectangle(Ship s, CanvasAnimatedDrawEventArgs args)
@@ -223,7 +217,7 @@ namespace SeasAtWar
                     lock (tileLock)
                     {
                         if (hoveredTile != null)
-                            args.DrawingSession.DrawRectangle((float)hoveredTile.ScreenPoint.X, (float)hoveredTile.ScreenPoint.Y, (float)Adjust(70), (float)Adjust(70), Windows.UI.Colors.Red, 3);
+                            args.DrawingSession.DrawRectangle((float)hoveredTile.ScreenPoint.X, (float)hoveredTile.ScreenPoint.Y, (float)Globals.Adjust(70), (float)Globals.Adjust(70), Windows.UI.Colors.Red, 3);
                     }
                 }
             }
@@ -244,7 +238,7 @@ namespace SeasAtWar
                 else
                     fileName = "images/Ships/ship" + (i + 2) + Globals.player.fleet[i].ShipName + "Hor.png";
                 var originalImage = await CanvasBitmap.LoadAsync(sender, fileName);
-                shipImages[i] = ScaleImage(originalImage);
+                shipImages[i] = Globals.ScaleImage(originalImage);
                 shipShadows[i] = GetShipShadow(i);
                 var transShip = new OpacityEffect
                 {
@@ -264,19 +258,9 @@ namespace SeasAtWar
                         originalImage = await CanvasBitmap.LoadAsync(sender, "images/Ships/ship3SubmarineHor.png");
                     else
                         originalImage = await CanvasBitmap.LoadAsync(sender, "images/Ships/ship3Submarine.png");
-                    alternateSubmarine = ScaleImage(originalImage);
+                    alternateSubmarine = Globals.ScaleImage(originalImage);
                 }
             }
-        }
-
-        private ICanvasImage ScaleImage(ICanvasImage image)
-        {
-            var scaleEffect = new ScaleEffect
-            {
-                Source = image,
-                Scale = new Vector2((float)scale, (float)scale)
-            };
-            return scaleEffect;
         }
 
         private ICanvasImage GetShipShadow(int index)
