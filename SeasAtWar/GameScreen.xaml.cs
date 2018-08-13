@@ -7,6 +7,7 @@ using Microsoft.Graphics.Canvas;
 using Windows.UI.Xaml;
 using Microsoft.Graphics.Canvas.Effects;
 using System.Numerics;
+using Windows.UI.Xaml.Media;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -32,10 +33,11 @@ namespace SeasAtWar
         public GameScreen()
         {
             InitializeComponent();
-            Globals.player.LoadGrid("target", new Point(Globals.Adjust(710), Globals.Adjust(30)), Globals.Adjust(70));
+            DisplayError("Must select ship first!");
+            /*Globals.player.LoadGrid("target", new Point(Globals.Adjust(710), Globals.Adjust(30)), Globals.Adjust(70));
             gameBoard.PointerMoved += Grid_PointerMoved;
             gameBoard.PointerPressed += Grid_PointerPressed;
-            gameBoard.PointerReleased += Grid_PointerReleased;
+            gameBoard.PointerReleased += Grid_PointerReleased;*/
         }
 
         private void Grid_PointerReleased(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
@@ -65,6 +67,7 @@ namespace SeasAtWar
             else if (pointerGrid.Equals("target"))
             {
                 //TODO
+                //hoveredTile.GridPoint.X;
             }
             
             
@@ -123,8 +126,15 @@ namespace SeasAtWar
             else
             {
                 hoveredTile = null;
-                //TODO:  add error message
+                DisplayError("Must select ship first!");
             }
+        }
+
+        private void DisplayError(String err)
+        {
+            errorMessage.TextAlignment = TextAlignment.Center;
+            errorMessage.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
+            errorMessage.Text = err;
         }
 
         private Tuple<Point, string> GetGridPosition(Windows.UI.Input.PointerPoint pointerPosition)
@@ -225,7 +235,7 @@ namespace SeasAtWar
 
         private void ScreenCanvas_CreateResources(CanvasAnimatedControl sender, CanvasCreateResourcesEventArgs args)
         {
-            args.TrackAsyncAction(CreateResourcesAsync(sender).AsAsyncAction());
+            //args.TrackAsyncAction(CreateResourcesAsync(sender).AsAsyncAction());
         }
 
         async Task CreateResourcesAsync(CanvasAnimatedControl sender)

@@ -14,5 +14,6 @@
             <ImageBrush ImageSource="images/gameBoard.png" Stretch="Uniform"></ImageBrush>
         </Grid.Background>
         <canvas:CanvasAnimatedControl x:Name="screenCanvas" Draw="ScreenCanvas_Draw"  CreateResources="ScreenCanvas_CreateResources"/>
+        <TextBlock x:Name="errorMessage" Text="" TextWrapping="Wrap" Margin="35,478,1006,202" FontSize="18" TextAlignment="Center" Height="40" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
     </Grid>
 </Page>

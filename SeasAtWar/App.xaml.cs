@@ -505,8 +505,8 @@ namespace SeasAtWar
                             }
                         }
                     }
-                    rootFrame.Navigate(typeof(MainMenu), e.Arguments);
-                    //rootFrame.Navigate(typeof(ShipSelect), e.Arguments);
+                    //rootFrame.Navigate(typeof(MainMenu), e.Arguments);
+                    rootFrame.Navigate(typeof(GameScreen), e.Arguments);
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();
