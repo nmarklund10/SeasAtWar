@@ -20,7 +20,7 @@ namespace SeasAtWar
             {
                 Globals.socket.Off(Globals.PlayerID + " gameID created");
                 Globals.socket.Off(Globals.PlayerID + " join success");
-                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                await dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
                 {
                     Frame.Navigate(typeof(ShipSelect));
                 });
@@ -28,7 +28,7 @@ namespace SeasAtWar
             Globals.socket.On("private game created", async (data) =>
             {
                 Globals.GameID = (long)data;
-                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                await dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
                 {
                     sessionTextBlock.Text = "Your Private Session ID is " + Globals.GameID + "\nWaiting for other player ...";
                 });

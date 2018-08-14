@@ -21,7 +21,7 @@ namespace SeasAtWar
                 Globals.GameID = (long)data;
                 Globals.socket.Off(Globals.PlayerID + " join success");
                 Globals.socket.Emit("update gameID", Globals.GameID);
-                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                await dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
                  {
                      Frame.Navigate(typeof(ShipSelect));
                  });

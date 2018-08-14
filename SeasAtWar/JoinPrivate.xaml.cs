@@ -18,7 +18,7 @@ namespace SeasAtWar
             InitializeComponent();
             Globals.socket.On("join error", async (data) =>
             {
-                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                await dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
                  {
                      userInput.Text = "";
                      errorText.Text = "Session ID Not Found";
@@ -27,7 +27,7 @@ namespace SeasAtWar
             });
             Globals.socket.On("join full", async (data) =>
             {
-                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                await dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
                 {
                     userInput.Text = "";
                     errorText.Text = "Game Full";
@@ -40,7 +40,7 @@ namespace SeasAtWar
                 Globals.socket.Off("join error");
                 Globals.socket.Off("join full");
                 Globals.socket.Off("join success");
-                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                await dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
                 {
                     Frame.Navigate(typeof(ShipSelect));
                 });

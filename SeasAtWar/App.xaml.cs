@@ -45,7 +45,7 @@ namespace SeasAtWar
         {
             if (!pinging)
             {
-                ping_timer = new Timer(Ping, null, 0, 25000);
+                ping_timer = new Timer(Ping, null, 0, 5000);
                 pinging = true;
             }
         }
@@ -424,23 +424,19 @@ namespace SeasAtWar
             });
             Globals.socket.On("disconnect", async () =>
             {
-                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
+                Globals.socket.Off("disconnect");
+                await CoreApplication.MainView.CoreWindow.Dispatcher.RunAsync(CoreDispatcherPriority.High, async () =>
                 {
-                    if (!dialog_open)
+                    var dialog = new ContentDialog
                     {
-                        dialog_open = true;
-                        var dialog = new ContentDialog
-                        {
-                            Title = "Server Disconnect",
-                            Content = "You have lost connection to the server.  Press OK to close the app.",
-                            PrimaryButtonText = "OK",
-                            IsSecondaryButtonEnabled = false
-                        };
-                        var result = await dialog.ShowAsync();
-                        Globals.StopPing();
-                        Globals.socket.Disconnect();
-                        CoreApplication.Exit();
-                    }
+                        Title = "Server Disconnect",
+                        Content = "You have lost connection to the server.  Press OK to close the app.",
+                        CloseButtonText = "OK",
+                    };
+                    var result = await dialog.ShowAsync();
+                    Globals.StopPing();
+                    Globals.socket.Disconnect();
+                    CoreApplication.Exit();
                 });
             });
             Globals.socket.Emit("new player", "");
@@ -505,8 +501,8 @@ namespace SeasAtWar
                             }
                         }
                     }
-                    //rootFrame.Navigate(typeof(MainMenu), e.Arguments);
-                    rootFrame.Navigate(typeof(GameScreen), e.Arguments);
+                    rootFrame.Navigate(typeof(MainMenu), e.Arguments);
+                    //rootFrame.Navigate(typeof(GameScreen), e.Arguments);
                 }
                 // Ensure the current window is active
                 Window.Current.Activate();

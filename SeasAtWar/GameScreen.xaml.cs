@@ -8,6 +8,9 @@ using Windows.UI.Xaml;
 using Microsoft.Graphics.Canvas.Effects;
 using System.Numerics;
 using Windows.UI.Xaml.Media;
+using Windows.UI.Core;
+using Windows.ApplicationModel.Core;
+using System.Collections.Generic;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -23,21 +26,59 @@ namespace SeasAtWar
         private ICanvasImage[] transparentShips = new ICanvasImage[4];
         private ICanvasImage[] transparentShadows = new ICanvasImage[4];
         private ICanvasImage alternateSubmarine;
+        private CoreDispatcher dispatcher = CoreApplication.MainView.CoreWindow.Dispatcher;
         private object clickedLock = new object();
         private object hoverLock = new object();
         private object tileLock = new object();
         private Ship clickedShip;
         private Ship hoveredShip;
         private Tile hoveredTile;
+        private string instructions = "1.Select desired attacking ship on left grid\n2. Select what kind of attack you want\n3. Select desired attack location on right grid\n4. Sink all of your enemy's ships before they sink yours!";
+        private Dictionary<bool, string[]> turnStrings = new Dictionary<bool, string[]>()
+        {
+            {true, new string[] {"Your Turn",  "Select ship and tile to attack!"} },
+            {false, new string[] {"Enemy Turn",  "Waiting for other player..."} },
+        };
+        private Dictionary<string, string> shipDescriptions = new Dictionary<string, string>()
+        {
+            {"Scrambler", "• For the next 3 turns, the enemy will not know whether they got a hit or miss.\n• Disables Enemy Scanner, Carrier and Cruiser special attacks.\n• Can only be used once per game." },
+            {"Scanner", "• Fires a normal shot to a target location. The area around it will be highlighted and a message will tell you how many ships are in that highlighted area.\n• Does not work when radar is jammed.\n• Can only be used once per game." },
+            {"Submarine", "• The first time the submarine is hit, it will be moved to a new location.\n• On reposition, the submarine regains full health.\n• PASSIVE EFFECT."},
+            {"Defender", "• The next shot the enemy makes, normal or special, will be forced to miss.\n• Fires a normal attack to target location.\n• Two uses per game."},
+            {"Cruiser", "• The first time this ship is hit, the enemy ship that shot it takes a hit of damage and is revealed.\n• Does not work when radar is jammed.\n• PASSIVE EFFECT"},
+            {"Carrier", "• Reveals the position of an enemy ship tile.\n• Does not work when radar is jammed.\n• One use per game."},
+            {"Executioner", "• Can be fired to a target location and if it hits a ship, that ship is instantly killed.\n• If fired on the highlighted area after the Scanner’s ability, it will kill the smallest ship in that area.\n• One use per game."},
+            {"Artillery", "• Fires an attack in the shape of a 3 x 3 cross.\n• One use per game."},
+        };
 
         public GameScreen()
         {
             InitializeComponent();
-            DisplayError("Must select ship first!");
-            /*Globals.player.LoadGrid("target", new Point(Globals.Adjust(710), Globals.Adjust(30)), Globals.Adjust(70));
+            Globals.player.LoadGrid("target", new Point(Globals.Adjust(710), Globals.Adjust(30)), Globals.Adjust(70));
             gameBoard.PointerMoved += Grid_PointerMoved;
             gameBoard.PointerPressed += Grid_PointerPressed;
-            gameBoard.PointerReleased += Grid_PointerReleased;*/
+            gameBoard.PointerReleased += Grid_PointerReleased;
+            ShipDescriptionText.Text = instructions;
+            Globals.socket.On(Globals.GameID + " player disconnect", async (data) =>
+            {
+                Globals.DrawReady = false;
+                Globals.socket.Off(Globals.GameID + " player disconnect");
+                await dispatcher.RunAsync(CoreDispatcherPriority.High, async () =>
+                {
+                    CleanUp();
+                    var dialog = new ContentDialog
+                    {
+                        Title = "Opponent Disconnect",
+                        Content = "The other player has disconnected from the game session.  Press OK to return to Main Menu.",
+                        CloseButtonText = "OK",
+                    };
+                    var result = await dialog.ShowAsync();
+                    Frame.Navigate(typeof(MainMenu));
+                });
+                Globals.player.ClearGrids();
+                Globals.player.fleet = new Ship[4];
+                Globals.GameID = -1;
+            });
         }
 
         private void Grid_PointerReleased(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
@@ -60,6 +101,7 @@ namespace SeasAtWar
                         lock (clickedLock)
                         {
                             clickedShip = hoveredShip;
+                            DisplayError("");
                         }
                     }
                 }
@@ -67,10 +109,15 @@ namespace SeasAtWar
             else if (pointerGrid.Equals("target"))
             {
                 //TODO
-                //hoveredTile.GridPoint.X;
+                if (clickedShip == null)
+                {
+                    DisplayError("Must Select Ship First!");
+                }
+                else
+                {
+                    DisplayError("");
+                }
             }
-            
-            
         }
 
         private void Grid_PointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
@@ -91,27 +138,28 @@ namespace SeasAtWar
 
         private void GetHoveredShip(Point pointerPosition, string pointerGrid)
         {
-            if (pointerPosition.X > -1 && pointerGrid.Equals("home"))
+            bool pointerOverShip = false;
+            if (pointerPosition.X > -1 && pointerGrid.Equals("home") && Globals.player.HasTurn)
             {
-                bool pointerOverShip = false;
                 for (int i = 0; i < Globals.player.fleet.Length; i++)
                 {
                     if (Globals.player.fleet[i].ContainsPoint(pointerPosition))
                     {
                         hoveredShip = Globals.player.fleet[i];
                         pointerOverShip = true;
-                        //showDescriptionText();
+                        ShipDescriptionTitle.Text = hoveredShip.ShipName + "'s Special Ability";
+                        ShipDescriptionText.Text = shipDescriptions[hoveredShip.ShipName];
                         break;
                     }
                 }
-                if (!pointerOverShip)
-                {
-                    //showInstructionsText();
-                    hoveredShip = null;
-                }
+                
             }
-            else
+            if (!pointerOverShip)
+            {
+                ShipDescriptionTitle.Text = "Instructions";
+                ShipDescriptionText.Text = instructions;
                 hoveredShip = null;
+            }
         }
 
         private void GetHoveredTile(Point pointerPosition, string pointerGrid)
@@ -126,7 +174,6 @@ namespace SeasAtWar
             else
             {
                 hoveredTile = null;
-                DisplayError("Must select ship first!");
             }
         }
 
@@ -235,7 +282,7 @@ namespace SeasAtWar
 
         private void ScreenCanvas_CreateResources(CanvasAnimatedControl sender, CanvasCreateResourcesEventArgs args)
         {
-            //args.TrackAsyncAction(CreateResourcesAsync(sender).AsAsyncAction());
+            args.TrackAsyncAction(CreateResourcesAsync(sender).AsAsyncAction());
         }
 
         async Task CreateResourcesAsync(CanvasAnimatedControl sender)
@@ -285,6 +332,14 @@ namespace SeasAtWar
                 TransformMatrix = Matrix3x2.CreateTranslation(1, 1)
             };
             return finalShadow;
+        }
+
+        private void CleanUp()
+        {
+            gameBoard.PointerMoved -= Grid_PointerMoved;
+            gameBoard.PointerPressed -= Grid_PointerPressed;
+            gameBoard.PointerReleased -= Grid_PointerReleased;
+            Globals.socket.Off(Globals.GameID + " player disconnect");
         }
 
         private void Page_Unloaded(object sender, RoutedEventArgs e)

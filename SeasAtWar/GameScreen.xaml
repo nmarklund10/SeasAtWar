@@ -15,5 +15,13 @@
         </Grid.Background>
         <canvas:CanvasAnimatedControl x:Name="screenCanvas" Draw="ScreenCanvas_Draw"  CreateResources="ScreenCanvas_CreateResources"/>
         <TextBlock x:Name="errorMessage" Text="" TextWrapping="Wrap" Margin="35,478,1006,202" FontSize="18" TextAlignment="Center" Height="40" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <TextBlock Text="Recent Activity" TextWrapping="Wrap" Margin="306,475,669,205" FontSize="26" TextAlignment="Center" Height="40" Foreground="White"/>
+        <TextBlock x:Name="ShipDescriptionTitle" Text="Instructions" TextWrapping="Wrap" Margin="645,474,81,206" FontSize="26" TextAlignment="Center" Height="40" Foreground="White"/>
+        <TextBlock Text="Timer" TextWrapping="Wrap" Margin="968,255,84,425" FontSize="26" TextAlignment="Center" Height="40" Foreground="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <TextBlock Text="Turn" TextWrapping="Wrap" Margin="969,24,83,656" FontSize="26" TextAlignment="Center" Height="40" Foreground="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <TextBlock x:Name="Turn" Text="" TextWrapping="Wrap" Margin="968,77,84,589" FontSize="40" TextAlignment="Center" Foreground="Red"/>
+        <TextBlock x:Name="TurnText" Text="" TextWrapping="Wrap" Margin="967,128,85,538" FontSize="17" TextAlignment="Center" Foreground="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <TextBlock x:Name="TimerText" Text="30" TextWrapping="Wrap" Margin="968,313,84,328" FontSize="60" TextAlignment="Center" Foreground="White" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        <TextBlock x:Name="ShipDescriptionText" HorizontalAlignment="Left" Text="" TextWrapping="Wrap" VerticalAlignment="Bottom" Margin="643,0,0,38" Height="166" Width="556" Foreground="White" FontSize="25"/>
     </Grid>
 </Page>

@@ -47,33 +47,30 @@ namespace SeasAtWar
             InitializeComponent();
             Globals.DrawReady = true;
             shipSelectButtons = new Button[8] { Scrambler, Scanner, Submarine, Defender, Cruiser, Carrier, Executioner, Artillery };
-            Globals.socket.On(Globals.GameID + " player disconnect", async (data) =>
-            {
-                Globals.DrawReady = false;
-                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, async () =>
-                {
-                    var dialog = new ContentDialog()
-                    {
-                        Title = "Opponent Disconnect",
-                        MaxWidth = ActualWidth, // Required for Mobile!
-                        Content = "The other player has disconnected from the game session.  Press OK to return to Main Menu."
-                    };
-
-                    dialog.PrimaryButtonText = "OK";
-                    dialog.IsSecondaryButtonEnabled = false;
-
-                    var result = await dialog.ShowAsync();
-                    Frame.Navigate(typeof(MainMenu));
-                });
-                Globals.socket.Off(Globals.GameID + " player disconnect");
-                Globals.player.ClearGrids();
-                Globals.player.fleet = new Ship[4];
-                Globals.GameID = -1;
-            });
             gameBoard.PointerMoved += GameBoard_PointerMoved;
             gameBoard.PointerPressed += GameBoard_PointerPressed;
             gameBoard.PointerReleased += GameBoard_PointerReleased;
             gameBoard.DoubleTapped += GameBoard_DoubleTapped;
+            Globals.socket.On(Globals.GameID + " player disconnect", async (data) =>
+            {
+                Globals.DrawReady = false;
+                Globals.socket.Off(Globals.GameID + " player disconnect");
+                await dispatcher.RunAsync(CoreDispatcherPriority.High, async () =>
+                {
+                    CleanUp();
+                    var dialog = new ContentDialog
+                    {
+                        Title = "Opponent Disconnect",
+                        Content = "The other player has disconnected from the game session.  Press OK to return to Main Menu.",
+                        CloseButtonText = "OK",
+                    };
+                    var result = await dialog.ShowAsync();
+                    Frame.Navigate(typeof(MainMenu));
+                });
+                Globals.player.ClearGrids();
+                Globals.player.fleet = new Ship[4];
+                Globals.GameID = -1;
+            });
             InitializeShipDescriptions();
             Globals.player.LoadGrid("home", new Point(Globals.Adjust(40), Globals.Adjust(30)), Globals.Adjust(70));
             Globals.player.fleet = new Ship[4] 
@@ -89,7 +86,7 @@ namespace SeasAtWar
 
         private async void TickTimer(object state)
         {
-            await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+            await dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
             {
                 if (timerValue == 20)
                     timerText.Foreground = new SolidColorBrush(Windows.UI.Colors.Red);
@@ -451,13 +448,21 @@ namespace SeasAtWar
             shipDescriptionTitle.Text = shipSpecialNames[imageIndex];
             shipDescriptionDetails.Text = shipDescriptions[imageIndex];            
         }
-
-        private void FinishButton_Click(object sender, RoutedEventArgs e)
+        
+        private void CleanUp()
         {
             gameBoard.PointerMoved -= GameBoard_PointerMoved;
             gameBoard.PointerPressed -= GameBoard_PointerPressed;
             gameBoard.PointerReleased -= GameBoard_PointerReleased;
             gameBoard.DoubleTapped -= GameBoard_DoubleTapped;
+            timer.Dispose();
+            Globals.socket.Off(Globals.GameID + " ready");
+            Globals.socket.Off(Globals.GameID + " player disconnect");
+        }
+
+        private void FinishButton_Click(object sender, RoutedEventArgs e)
+        {
+            CleanUp();
             for (int i = 0; i < Globals.player.fleet.Length; i++)
             {
                 if (Globals.player.fleet[i].ShipName.Contains("temp"))
@@ -513,14 +518,13 @@ namespace SeasAtWar
             shipDescriptionDetails.FontFamily = new FontFamily("Stencil");
             shipDescriptionDetails.FontSize = 28;
             shipDescriptionDetails.Text = "\nWaiting for other player...";
-            timer.Dispose();
             timerText.Text = "";
             Globals.socket.On(Globals.GameID + " ready", async (data) =>
             {
                 Globals.socket.Off(Globals.GameID + " ready");
                 if ((long)data == Globals.PlayerID)
                     Globals.player.HasTurn = true;
-                await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                await dispatcher.RunAsync(CoreDispatcherPriority.High, () =>
                 {
                     Frame.Navigate(typeof(GameScreen));
                 });
