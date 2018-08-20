@@ -79,6 +79,14 @@ namespace SeasAtWar
                 Globals.player.fleet = new Ship[4];
                 Globals.GameID = -1;
             });
+            DisplayTurn();
+        }
+
+        private void DisplayTurn()
+        {
+            Turn.Text = turnStrings[Globals.player.HasTurn][0];
+            TurnText.Text = turnStrings[Globals.player.HasTurn][1];
+            NormalAttackButton.IsEnabled = Globals.player.HasTurn;
         }
 
         private void Grid_PointerReleased(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
@@ -109,7 +117,7 @@ namespace SeasAtWar
             else if (pointerGrid.Equals("target"))
             {
                 //TODO
-                if (clickedShip == null)
+                if (clickedShip == null && Globals.player.HasTurn)
                 {
                     DisplayError("Must Select Ship First!");
                 }
@@ -346,6 +354,16 @@ namespace SeasAtWar
         {
             screenCanvas.RemoveFromVisualTree();
             screenCanvas = null;
+        }
+
+        private void NormalAttack_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void SpecialAttack_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

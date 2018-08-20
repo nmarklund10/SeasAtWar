@@ -75,5 +75,13 @@ namespace SeasAtWar
                 errorText.Text = "No Input";
             userInput.Text = "";
         }
+
+        private void EnterHandler(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter)
+            {
+                JoinGame_Click(sender, null);
+            }
+        }
     }
 }
