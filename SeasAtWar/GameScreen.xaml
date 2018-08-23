@@ -25,5 +25,7 @@
         <TextBlock x:Name="ShipDescriptionText" HorizontalAlignment="Left" Text="" TextWrapping="Wrap" VerticalAlignment="Bottom" Margin="643,0,0,38" Height="166" Width="556" Foreground="White" FontSize="25"/>
         <Button x:Name="NormalAttackButton" IsEnabled="False" Content="Normal Attack" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="38,511,0,0" Style="{StaticResource SaWGameStyle}" Height="77" Width="235" FontSize="27" Click="NormalAttack_Click"/>
         <Button x:Name="SpecialAttackButton" IsEnabled="False" Content="Special Attack" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="38,600,0,0" Style="{StaticResource SaWGameStyle}" Height="77" Width="235" FontSize="27" Click="SpecialAttack_Click"/>
+        <Rectangle x:Name="NormalAttackRect" HorizontalAlignment="Left" Height="79" VerticalAlignment="Top" Width="239" Margin="36.5,510,0,0" StrokeThickness="3"/>
+        <Rectangle x:Name="SpecialAttackRect" HorizontalAlignment="Left" Height="79" VerticalAlignment="Top" Width="239" Margin="36.5,598,0,0" StrokeThickness="3"/>
     </Grid>
 </Page>

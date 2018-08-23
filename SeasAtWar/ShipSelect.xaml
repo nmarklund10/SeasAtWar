@@ -8,7 +8,7 @@
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     mc:Ignorable="d"
     Unloaded="Page_Unloaded">
-    <Grid Name="gameBoard" IsHoldingEnabled="False" IsRightTapEnabled="False">
+    <Grid Name="gameBoard">
         <Grid.Background>
             <ImageBrush ImageSource="images/shipSelect.png" Stretch="Uniform"></ImageBrush>
         </Grid.Background>

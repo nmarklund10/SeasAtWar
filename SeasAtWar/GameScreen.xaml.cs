@@ -19,6 +19,16 @@ namespace SeasAtWar
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
+    /// 
+
+    public class TurnData {
+        public long GameID = Globals.GameID;
+        public long PlayerID = Globals.PlayerID;
+        public int AttackCode { get; set; }
+        public List<Tile> AttackTiles = new List<Tile>();
+        public string ShipName { get; set; }
+    }
+
     public sealed partial class GameScreen : Page
     {
         private ICanvasImage[] shipImages = new ICanvasImage[4];
@@ -56,9 +66,9 @@ namespace SeasAtWar
             InitializeComponent();
             Globals.player.LoadGrid("target", new Point(Globals.Adjust(710), Globals.Adjust(30)), Globals.Adjust(70));
             gameBoard.PointerMoved += Grid_PointerMoved;
-            gameBoard.PointerPressed += Grid_PointerPressed;
             gameBoard.PointerReleased += Grid_PointerReleased;
             ShipDescriptionText.Text = instructions;
+            Globals.player.HasTurn = true;
             Globals.socket.On(Globals.GameID + " player disconnect", async (data) =>
             {
                 Globals.DrawReady = false;
@@ -86,15 +96,14 @@ namespace SeasAtWar
         {
             Turn.Text = turnStrings[Globals.player.HasTurn][0];
             TurnText.Text = turnStrings[Globals.player.HasTurn][1];
-            NormalAttackButton.IsEnabled = Globals.player.HasTurn;
+            SpecialAttackButton.IsEnabled = Globals.player.HasTurn;
+            if (Globals.player.HasTurn)
+            {
+                NormalAttackRect.Stroke = new SolidColorBrush(Windows.UI.Colors.Red);
+            }
         }
 
         private void Grid_PointerReleased(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
-        {
-            
-        }
-
-        private void Grid_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             Windows.UI.Input.PointerPoint pointer = e.GetCurrentPoint(gameBoard);
             Tuple<Point, string> result = GetGridPosition(pointer);
@@ -345,7 +354,6 @@ namespace SeasAtWar
         private void CleanUp()
         {
             gameBoard.PointerMoved -= Grid_PointerMoved;
-            gameBoard.PointerPressed -= Grid_PointerPressed;
             gameBoard.PointerReleased -= Grid_PointerReleased;
             Globals.socket.Off(Globals.GameID + " player disconnect");
         }
@@ -358,12 +366,18 @@ namespace SeasAtWar
 
         private void NormalAttack_Click(object sender, RoutedEventArgs e)
         {
-
+            SpecialAttackButton.IsEnabled = true;
+            NormalAttackButton.IsEnabled = false;
+            NormalAttackRect.Stroke = new SolidColorBrush(Windows.UI.Colors.Red);
+            SpecialAttackRect.Stroke = new SolidColorBrush(Windows.UI.Colors.Transparent);
         }
 
         private void SpecialAttack_Click(object sender, RoutedEventArgs e)
         {
-
+            SpecialAttackButton.IsEnabled = false;
+            NormalAttackButton.IsEnabled = true;
+            SpecialAttackRect.Stroke = new SolidColorBrush(Windows.UI.Colors.Red);
+            NormalAttackRect.Stroke = new SolidColorBrush(Windows.UI.Colors.Transparent);
         }
     }
 }

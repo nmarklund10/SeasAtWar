@@ -531,5 +531,6 @@ namespace SeasAtWar
             });
             Globals.socket.Emit("fleet finished", string.Format("{{\"playerID\": {0}, \"gameID\": {1}}}", Globals.PlayerID, Globals.GameID));
         }
+
     }
 }
